@@ -1,36 +1,17 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text,Button } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
+import AppIntroPage from './src/Pages/AppIntro/AppIntroSlider';
 
-class HomeScreen extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Home Screen</Text>
-      </View>
-    );
-  }
-}
-
-class DetailsScreen extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Details Screen</Text>
-      </View>
-    );
-  }
-}
 
 const AppNavigator = createStackNavigator({
-  Home: {
-    screen: HomeScreen,
-  },
-  Details: DetailsScreen,
+  AppIntro: {
+    screen: AppIntroPage,
+  }
 },
 {
-  initialRouteName: 'Details',
+  initialRouteName: 'AppIntro',
 });
 
 export default createAppContainer(AppNavigator);
