@@ -8,6 +8,9 @@ import AppIntroPage from './src/Pages/AppIntro/AppIntroSlider';
 const AppNavigator = createStackNavigator({
   AppIntro: {
     screen: AppIntroPage,
+    navigationOptions:{
+      header:null
+    }
   }
 },
 {

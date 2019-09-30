@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet,View,Text,Image } from 'react-native';
+import { View,Text,Image } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
+import { initialAppStyle } from '../../CommonFiles/Style.js';
  
 const slides = [
   {
@@ -28,10 +29,11 @@ const slides = [
  
 export default class AppIntro extends React.Component {
   _renderItem = (item) => {
+    const imageUrl = item.item.image.toString();
     return (
-      <View >
-        <Text >{item.title}</Text>
-        <Image source={item.image} />
+      <View style={initialAppStyle.slide1}>
+        
+        <Image source={{uri: imageUrl}} style={{height:'100%'}} />
         <Text >{item.text}</Text>
       </View>
     );
