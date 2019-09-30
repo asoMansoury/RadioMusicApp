@@ -2,6 +2,7 @@ import React from 'react';
 import { View,Text,Image } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import { initialAppStyle } from '../../CommonFiles/Style.js';
+import Index from '../Authentication/index';
  
 const slides = [
   {
@@ -40,10 +41,15 @@ export default class AppIntro extends React.Component {
   }
 
   _onDone = () => {
-      alert("OK");
+      this.props.navigation.push("Authentication");
   }
 
   render() {
-    return <AppIntroSlider renderItem={this._renderItem} slides={slides} onDone={this._onDone} />;
+    if(false){
+      return <AppIntroSlider renderItem={this._renderItem} slides={slides} onDone={this._onDone} />;
+    }else{
+     return <Index></Index>
+    }
+    
   }
 }
