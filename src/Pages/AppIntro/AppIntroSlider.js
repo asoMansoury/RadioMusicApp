@@ -41,7 +41,7 @@ export default class AppIntro extends React.Component {
   }
 
   _onDone = () => {
-      this.props.navigation.push("Authentication");
+      this.props.navigation.replace("Authentication");
   }
 
   render() {
