@@ -26,7 +26,7 @@ export default class Login extends Component{
                         placeholder="Enter Password"
                         secureTextEntry
                         iconName="ios-lock"
-                        iconColor="#2c384A"
+                        
                 ></FormInput>
                 <View style={styles.buttonContainer}>
                     <FormButton buttonType="outline"

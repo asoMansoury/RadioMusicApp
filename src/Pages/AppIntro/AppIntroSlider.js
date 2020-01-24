@@ -3,7 +3,8 @@ import { View,Text,Image } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import { initialAppStyle } from '../../CommonFiles/Style.js';
 import Index from '../Authentication/index';
- 
+import Main from './../Main/Main';
+
 const slides = [
   {
     key: 'somethun',
@@ -48,7 +49,7 @@ export default class AppIntro extends React.Component {
     if(false){
       return <AppIntroSlider renderItem={this._renderItem} slides={slides} onDone={this._onDone} />;
     }else{
-     return <Index></Index>
+     return <Main></Main>
     }
     
   }
