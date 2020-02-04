@@ -1,0 +1,1 @@
+export const SET_USER_LOGGER = 'SET_USER_LOGGER';

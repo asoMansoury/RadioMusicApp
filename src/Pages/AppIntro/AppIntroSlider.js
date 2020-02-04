@@ -4,6 +4,8 @@ import AppIntroSlider from 'react-native-app-intro-slider';
 import { initialAppStyle } from '../../CommonFiles/Style.js';
 import Index from '../Authentication/index';
 import Main from './../Main/Main';
+import { connect } from 'react-redux';
+import {setUserLogged} from '../Redux/Actions/index';
 
 const slides = [
   {
@@ -29,7 +31,9 @@ const slides = [
   }
 ];
  
-export default class AppIntro extends React.Component {
+
+ class AppIntro extends React.Component {
+
   _renderItem = (item) => {
     const imageUrl = item.item.image.toString();
     return (
@@ -42,11 +46,12 @@ export default class AppIntro extends React.Component {
   }
 
   _onDone = () => {
-      this.props.navigation.replace("Authentication");
+      this.props.setUserIsLogged(false);
+      this.props.navigation.replace("MainPage");
   }
 
   render() {
-    if(false){
+    if(this.props.user.isFirstTime){
       return <AppIntroSlider renderItem={this._renderItem} slides={slides} onDone={this._onDone} />;
     }else{
      return <Main></Main>
@@ -54,3 +59,19 @@ export default class AppIntro extends React.Component {
     
   }
 }
+
+const mapStateToProps = (state)=>{
+  return {
+    user:state.user
+  }
+}
+
+const mapDispatchToProps = dispath =>{
+  return{
+    setUserIsLogged:isLogged =>{
+      dispath(setUserLogged(isLogged))
+    }
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(AppIntro);

@@ -4,18 +4,18 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import AppIntroPage from './src/Pages/AppIntro/AppIntroSlider';
 import Index from './src/Pages/Authentication/index';;
-import Main from './src/Pages/Main/Main';
 import {connect,Provider} from 'react-redux';
-import store from './src/Pages/Redux/Store/index'
-const MainNavigator = createStackNavigator({
+import store from './src/Pages/Redux/Store/index';
+
+const RootNavigator = createStackNavigator({
   AppIntro: {
     screen: AppIntroPage,
     navigationOptions:{
       header:null
     }
   },
-  MainPage:{
-    screen:Main,
+  Authentication:{
+    screen:Index,
     navigationOptions:{
       header:null
     }
@@ -25,18 +25,21 @@ const MainNavigator = createStackNavigator({
   initialRouteName:"AppIntro"
 });
 
-const AppContainer = createAppContainer(MainNavigator);
+const AppContainer = createAppContainer(RootNavigator);
 
-class AppLoader extends React.Component{
+class AppNavigation extends React.Component{
+  constructor(props){
+    super(props);
+    
+  }
+
   render(){
     
     return(
-      <Provider store={store}>
-        <AppContainer></AppContainer>
-      </Provider>
+        <AppContainer screenProps={this.props}></AppContainer>
     )
   }
 }
 
 
-export default AppLoader;
+export default connect(null,null)(AppNavigation);
