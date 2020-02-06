@@ -33,7 +33,12 @@ const slides = [
  
 
  class AppIntro extends React.Component {
+  constructor(props){
+    super(props);
 
+    if(this.props.user.isFirstTimeLogIn==true)
+      this.props.navigation.replace("MainPage");
+  }
   _renderItem = (item) => {
     const imageUrl = item.item.image.toString();
     return (
@@ -46,17 +51,16 @@ const slides = [
   }
 
   _onDone = () => {
-      this.props.setUserIsLogged(false);
+      this.props.setUserIsFirstTimeLogin(false);
       this.props.navigation.replace("MainPage");
   }
 
   render() {
-    if(this.props.user.isFirstTime){
+    if(this.props.user.isFirstTimeLogIn){
       return <AppIntroSlider renderItem={this._renderItem} slides={slides} onDone={this._onDone} />;
     }else{
      return <Main></Main>
     }
-    
   }
 }
 
@@ -68,7 +72,7 @@ const mapStateToProps = (state)=>{
 
 const mapDispatchToProps = dispath =>{
   return{
-    setUserIsLogged:isLogged =>{
+    setUserIsFirstTimeLogin:isLogged =>{
       dispath(setUserLogged(isLogged))
     }
   }
