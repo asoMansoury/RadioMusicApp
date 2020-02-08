@@ -7,6 +7,7 @@ import Browse from './Browse/Browse';
 import Playlists from './Playlists/Playlists';
 import Search from './Search/Search';
 import Home from './Home/Home';
+import Profile from './MyMusicProfile/Profile';
 
 
 export default class Main extends Component{
@@ -42,8 +43,8 @@ export default class Main extends Component{
         },
         {
             key: 'MusicProfile',
-            icon: 'ios-musical-notes',
-            label: 'Music',
+            icon: 'ios-person',
+            label: 'Profile',
             barColor: '#E64A19',
             pressColor: 'rgba(255, 255, 255, 0.16)'
         }
@@ -80,7 +81,7 @@ export default class Main extends Component{
         if(this.state.activeTab==='MusicProfile'){
             return(
                 <View style={{flex:1}}>
-                    <MusicProfile></MusicProfile>
+                    <Profile></Profile>
                     <BottomNavigation
                         activeTab={this.state.activeTab}
                         renderTab={this.renderTab}
