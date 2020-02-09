@@ -1,9 +1,10 @@
+
 import React from 'react';
 import {Input} from 'react-native-elements';
 import {StyleSheet,View,KeyboardAvoidingView} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-class LoginComponent extends React.Component{
+class RegisterComponent extends React.Component{
 
     renderIcon = icon =>()=>(
         <Ionicons name={icon} size={24}  ></Ionicons>
@@ -12,12 +13,14 @@ class LoginComponent extends React.Component{
     render(){
         return(
                     <View >
-                        <Input leftIcon={this.renderIcon('ios-mail')} placeholder='Email'></Input>
+                        <Input leftIcon={this.renderIcon('ios-person')} placeholder='UserName'></Input>
                         <Input leftIcon={this.renderIcon('ios-key')} placeholder='Password'></Input>
-                        <View style={{ height: 60 }} />
+                        <Input leftIcon={this.renderIcon('ios-key')} placeholder='Confirm Password'></Input>
+                        <Input leftIcon={this.renderIcon('ios-mail')} placeholder='Email'></Input>
                     </View>
                      
         )
     }
 }
-export default LoginComponent;
+export default RegisterComponent;
+

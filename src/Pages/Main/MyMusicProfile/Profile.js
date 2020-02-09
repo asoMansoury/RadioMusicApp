@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {ActivityIndicator,View,StyleSheet,TouchableOpacity,KeyboardAvoidingView } from 'react-native';
 import {Image} from 'react-native-elements';
 import LoginComponent from './../../component/ProfileComponents/LoginComponent';
+import RegisterComponent from './../../component/ProfileComponents/RegisterComponent';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 const styles = StyleSheet.create({
     container:{
@@ -29,11 +30,23 @@ export default class Profile extends Component{
                     <Image style={styles.logo} PlaceholderContent={<ActivityIndicator></ActivityIndicator>}  
                            source={{uri:'https://roocket.ir/public/images/2017/8/9/React-native_Banner2.png'}}></Image>
                 </View>
-                <KeyboardAwareScrollView style={{flex:1}}
-                    scrollEnabled={true}
+                {/* <KeyboardAwareScrollView style={{flex:1}}
+                    scrollEnabled={false}
+                    
+                    resetScrollToCoords={{x:0,y:0}}
                 >
                     <View style={{flex:1}}>
                         <LoginComponent></LoginComponent>
+                    </View>
+                </KeyboardAwareScrollView> */}
+
+                <KeyboardAwareScrollView style={{flex:1}}
+                    scrollEnabled={true}
+                    
+                    resetScrollToCoords={{x:0,y:0}}
+                >
+                    <View style={{flex:1}}>
+                        <RegisterComponent></RegisterComponent>
                     </View>
                 </KeyboardAwareScrollView>
 
