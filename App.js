@@ -26,13 +26,17 @@ const MainNavigator = createStackNavigator({
 });
 
 const AppContainer = createAppContainer(MainNavigator);
+import { NavigationContainer } from '@react-navigation/native';
 
 class AppLoader extends React.Component{
   render(){
     
     return(
       <Provider store={store}>
-        <AppContainer></AppContainer>
+        <NavigationContainer>
+          <AppContainer></AppContainer>
+        </NavigationContainer>
+        
       </Provider>
     )
   }
