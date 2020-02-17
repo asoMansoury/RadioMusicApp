@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {ActivityIndicator,View,StyleSheet,TouchableOpacity,KeyboardAvoidingView, Dimensions } from 'react-native';
-import {Image} from 'react-native-elements';
+import {ActivityIndicator,View,StyleSheet,TouchableOpacity, Dimensions } from 'react-native';
 import LoginComponent from './../../component/ProfileComponents/LoginComponent';
 import RegisterComponent from './../../component/ProfileComponents/RegisterComponent';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -11,14 +10,15 @@ const initialLayout = {
     width:Dimensions.get('window').width
 }
 
-const FirstRoute = () => <View style={[ styles.container, { backgroundColor: '#ff4081' } ]} />;
-const SecondRoute = () => <View style={[ styles.container, { backgroundColor: '#673ab7' } ]} />;
+const FirstRoute = () => <KeyboardAwareScrollView ><LoginComponent /></KeyboardAwareScrollView>;
+const SecondRoute = () => <KeyboardAwareScrollView>
+    <RegisterComponent /></KeyboardAwareScrollView>;
 
 const styles = StyleSheet.create({
     container:{
         flex:1,flexDirection:'column',
         justifyContent:'flex-end',
-        backgroundColor: '#2c3e50'
+        backgroundColor: '#c51162'
     },
     loginContainer:{
         
@@ -34,49 +34,38 @@ export default class Profile extends Component{
     state = {
         index: 0,
         routes: [
-          { key: 'first', title: 'First' },
-          { key: 'second', title: 'Second' },
+          { key: 'SignIn', title: 'SignIn' },
+          { key: 'SignUp', title: 'SignUp' },
         ],
       };
     
       _handleIndexChange = index => this.setState({ index });
     
-      _renderHeader = props => <TabBar {...props} />;
+      _renderHeader = props => <View  {...props} />;
     
       _renderScene = SceneMap({
-        first: FirstRoute,
-        second: SecondRoute,
+        SignIn: FirstRoute,
+        SignUp: SecondRoute,
       });
 
+     renderTabBar = props => (
+        <TabBar
+          {...props}
+          
+          style={{ backgroundColor: '#388E3C' }}
+        />
+      );
     render(){
         return(
             <View style={styles.container}>
-                <View style={{minHeight:'35%'}}>
-                    <Image style={styles.logo} PlaceholderContent={<ActivityIndicator></ActivityIndicator>}  
-                           source={{uri:'https://roocket.ir/public/images/2017/8/9/React-native_Banner2.png'}}></Image>
-                </View>
-                {/* <KeyboardAwareScrollView style={{flex:1}}
-                    scrollEnabled={false}
-                    
-                    resetScrollToCoords={{x:0,y:0}}
-                >
-                    <View style={{flex:1}}>
-                        <LoginComponent></LoginComponent>
-                    </View>
-                </KeyboardAwareScrollView> */}
-
-    <TabView
-        swipeEnabled={true}
-        navigationState={this.state}
-        renderScene={this._renderScene}
-        renderHeader={this._renderHeader}
-        onIndexChange={this._handleIndexChange}
-        initialLayout={initialLayout}
-      />
-
-                
-
-                
+                <TabView
+                    swipeEnabled={true}
+                    navigationState={this.state}
+                    renderTabBar={this.renderTabBar}
+                    renderScene={this._renderScene}
+                    onIndexChange={this._handleIndexChange}
+                    initialLayout={initialLayout}
+                />    
             </View>
             
         )

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import {Input} from 'react-native-elements';
-import {StyleSheet,View,KeyboardAvoidingView} from 'react-native';
+import {StyleSheet,View,Image,ActivityIndicator} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 class RegisterComponent extends React.Component{
@@ -12,13 +12,20 @@ class RegisterComponent extends React.Component{
 
     render(){
         return(
-                    <View >
-                        <Input leftIcon={this.renderIcon('ios-person')} placeholder='UserName'></Input>
-                        <Input leftIcon={this.renderIcon('ios-key')} placeholder='Password'></Input>
-                        <Input leftIcon={this.renderIcon('ios-key')} placeholder='Confirm Password'></Input>
-                        <Input leftIcon={this.renderIcon('ios-mail')} placeholder='Email'></Input>
+                <View  style={{flext:1,flexDirection:'column'}}>
+                    <View style={{height:200}}>
+                            <Image 
+                                style={{height:200}}
+                                placeholder={<ActivityIndicator></ActivityIndicator>}
+                                source={{uri:'https://roocket.ir/public/images/2018/4/10/nodejs-2.png'}}></Image>
                     </View>
-                     
+                    <View>
+                    <Input leftIcon={this.renderIcon('ios-person')} placeholder='UserName'></Input>
+                    <Input leftIcon={this.renderIcon('ios-key')} placeholder='Password'></Input>
+                    <Input leftIcon={this.renderIcon('ios-key')} placeholder='Confirm Password'></Input>
+                    <Input leftIcon={this.renderIcon('ios-mail')} placeholder='Email'></Input>
+                    </View>
+                </View>                 
         )
     }
 }

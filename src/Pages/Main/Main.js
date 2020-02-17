@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import {Text, View} from 'react-native';
-import BottomNavigation, {ShiftingTab} from 'react-native-material-bottom-navigation';
+import BottomNavigation, {ShiftingTab,FullTab} from 'react-native-material-bottom-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MusicProfile from './MyMusicProfile/MusicProfile';
 import Browse from './Browse/Browse';
@@ -17,7 +17,7 @@ export default class Main extends Component{
             key: 'Home',
             icon: 'ios-home',
             label: 'Home',
-            barColor: '#E64A19',
+            barColor: '#388E3C',
             pressColor: 'rgba(255, 255, 255, 0.16)'
         },
         {
@@ -31,21 +31,21 @@ export default class Main extends Component{
           key: 'Search',
           icon: 'ios-search',
           label: 'Search',
-          barColor: '#E64A19',
+          barColor: '#388E3C',
           pressColor: 'rgba(255, 255, 255, 0.16)'
         },
         {
           key: 'Playlists',
           icon: 'ios-list-box',
           label: 'Playlists',
-          barColor: '#B71C1C',
+          barColor: '#388E3C',
           pressColor: 'rgba(255, 255, 255, 0.16)'
         },
         {
             key: 'MusicProfile',
             icon: 'ios-person',
             label: 'Profile',
-            barColor: '#E64A19',
+            barColor: '#388E3C',
             pressColor: 'rgba(255, 255, 255, 0.16)'
         }
       ]
@@ -60,13 +60,13 @@ export default class Main extends Component{
     )
 
     renderTab=({tab,isActive})=>(
-        <ShiftingTab
+        <FullTab
             isActive={isActive}
             key={tab.key}
             label={tab.label}
             renderIcon ={this.renderIcon(tab.icon)}
             
-        ></ShiftingTab>
+        ></FullTab>
     )
 
     componentDidUpdate(){
@@ -86,6 +86,7 @@ export default class Main extends Component{
                         activeTab={this.state.activeTab}
                         renderTab={this.renderTab}
                         tabs = {this.tabs}
+                        style={{borderTopColor:'black'}}
                         onTabPress={newTab => this.setState({ activeTab: newTab.key })}
                         
                     >
