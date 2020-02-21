@@ -36,6 +36,7 @@ const slides = [
   constructor(props){
     super(props);
 
+    
     if(this.props.user.isFirstTimeLogIn==true)
       this.props.navigation.replace("MainPage");
   }
