@@ -8,7 +8,7 @@ export default commonreducer = (state = initialState , action={})=>{
         case SET_EMAIL_VALIDATE:
             let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
             const {payload} = action;
-            let result = {};
+            let result = initialState;
             if(reg.test(payload) === true)
             {
                  result = {

@@ -1,18 +1,19 @@
 import React, {Component} from 'react';
-import {ActivityIndicator,View,StyleSheet,TouchableOpacity, Dimensions } from 'react-native';
+import {View,StyleSheet, Dimensions } from 'react-native';
 import LoginComponent from './../../component/ProfileComponents/LoginComponent';
 import RegisterComponent from './../../component/ProfileComponents/RegisterComponent';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {TabView,TabBar,SceneMap} from 'react-native-tab-view';
 import MusicProfile from './MusicProfile';
 import {connect} from 'react-redux';
+import DropdownAlert from 'react-native-dropdownalert';
 
 const initialLayout = {
     height:0,
     width:Dimensions.get('window').width
 }
 
-const FirstRoute = () => <KeyboardAwareScrollView ><LoginComponent /></KeyboardAwareScrollView>;
+const FirstRoute = () => <LoginComponent />;
 const SecondRoute = () => <KeyboardAwareScrollView><RegisterComponent /></KeyboardAwareScrollView>;
 
 const styles = StyleSheet.create({
@@ -48,7 +49,7 @@ class Profile extends Component{
 
     
       _handleIndexChange = index => this.setState({ index });
-    
+    //   this.dropDownAlertRef.alertWithType('error', 'Error', "Hello");
       _renderHeader = props => <View  {...props} />;
     
       _renderScene = SceneMap({
@@ -74,7 +75,8 @@ class Profile extends Component{
                         renderScene={this._renderScene}
                         onIndexChange={this._handleIndexChange}
                         initialLayout={initialLayout}
-                    />    
+                    />   
+                    <DropdownAlert ref={ref => this.dropDownAlertRef = ref} zIndex={10000} /> 
                 </View>
                 
             )

@@ -5,6 +5,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import {checkEmailValidate} from '../../Redux/Actions/index';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
 
 class LoginComponent extends React.Component{
     constructor(props){
@@ -30,16 +32,14 @@ class LoginComponent extends React.Component{
     )
 
     _LoginEvent=()=>{
-        this.setState({
-            ...this.state,
-            loadingModal:true
-        });
+        // this.setState({
+        //     ...this.state,
+        //     loadingModal:true
+        // });
         axios.post("http://192.168.164.2:53094//api/userapi/Login",{
             userName: 'aso',
             password: '12345'
         }).then(res => {
-            console.log(res);
-            console.log(res.data);
             this.setState({
                 ...this.state,
                 loadingModal:false
@@ -102,6 +102,7 @@ class LoginComponent extends React.Component{
 
     render(){
         return(
+            <KeyboardAwareScrollView>
                     <View style={{flext:1,flexDirection:'column'}}>
                         <View style={{height:200}}>
                                 <Image 
@@ -120,7 +121,7 @@ class LoginComponent extends React.Component{
                             <ActivityIndicator height={100} width={100}></ActivityIndicator>
                         </Overlay>
                     </View>
-                     
+            </KeyboardAwareScrollView>  
         )
     }
 }
