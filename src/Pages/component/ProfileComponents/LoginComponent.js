@@ -10,16 +10,18 @@ class LoginComponent extends React.Component{
         this._LoginEvent = this._LoginEvent.bind(this);
         this.handleChangeEmail = this.handleChangeEmail.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
-    }
-
-    state ={
-        loadingModal:false,
-        isDisabeBtnLogin:true,
-        userData:{
-            Email:'',
-            Password:''
+        this.disableBtnLogin = this.disableBtnLogin.bind(this);
+        
+        this.state ={
+            loadingModal:false,
+            isDisabeBtnLogin:true,
+            userData:{
+                Email:'',
+                Password:''
+            }
         }
     }
+
 
     renderIcon = icon =>()=>(
         <Ionicons name={icon} size={24}  ></Ionicons>
@@ -43,30 +45,32 @@ class LoginComponent extends React.Component{
           });
     }
 
-    handleChangeEmail=(e)=>{
-        this.setState({
-            ...this.state,
-            loadingModal:true
-        });
-        // alert(this.state.userData.Email);
-       this.disableBtnLogin();
-       
+      handleChangeEmail(email){
+        this.setState((prevState)=>{
+            return{
+                loadingModal:false,
+                userData:{
+                    Email:email,
+                    Password:prevState.userData.Password
+                }
+            }
+        },this.disableBtnLogin);
     }
 
      handleChangePassword=(e)=>{
-        this.setState({
-            ...this.state,
-            userData:{
-                Password:e
+         this.setState((prevState)=>{
+            return{
+                loadingModal:false,
+                userData:{
+                    Email:prevState.userData.Email,
+                    Password:e
+                }
             }
-        });
-
-        // alert(this.state.userData.Password);
-        this.disableBtnLogin();
+        },this.disableBtnLogin);
     }
 
     disableBtnLogin(){
-
+        console.log(this.state);
         if(this.state.userData.Email!=""&&this.state.userData.Password!=""){
             this.setState({
                 ...this.state,
@@ -76,7 +80,7 @@ class LoginComponent extends React.Component{
             this.setState({
                 ...this.state,
                 isDisabeBtnLogin:true
-            })
+            });
         }
     }
     
@@ -92,7 +96,7 @@ class LoginComponent extends React.Component{
                         </View>
                         <View>
                             <Input leftIcon={this.renderIcon('ios-mail')} placeholder='Email' onChangeText={this.handleChangeEmail}></Input>
-                            <Input leftIcon={this.renderIcon('ios-key')} placeholder='Password' onChangeText={this.handleChangePassword}></Input>
+                            <Input leftIcon={this.renderIcon('ios-key')} placeholder='Password' onChangeText={this.handleChangePassword.bind(this)}></Input>
                         </View>
                         <View style={{marginTop:10,flex:1,alignItems:'center'}}>
                           <Button  onPress={this._LoginEvent} disabled={this.state.isDisabeBtnLogin} title="SignIn"  buttonStyle={{width:250}} type="outline" ></Button>
