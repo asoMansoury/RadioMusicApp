@@ -1,1 +1,2 @@
 export const SET_USER_LOGGER = 'SET_USER_LOGGER';
+export const SET_EMAIL_VALIDATE = 'SET_EMAIL_VALIDATE';

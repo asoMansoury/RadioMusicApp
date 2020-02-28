@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 import user from './userReducer';
+import commonreducer from './commonReducer';
 
 const rehydrated = (state=false,action)=>{
     switch (action.type) {
@@ -15,5 +16,6 @@ const rehydrated = (state=false,action)=>{
 
 export default combineReducers({
     rehydrated,
-    user:user
+    user:user,
+    commonreducer:commonreducer
 });

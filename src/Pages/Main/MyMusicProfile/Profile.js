@@ -92,7 +92,6 @@ class Profile extends Component{
 }
 
 const mapstatesToProps =(state)=>{
-    console.log(state);
     return {
         user:state.user
     }

@@ -3,6 +3,8 @@ import {Input,Button,Overlay} from 'react-native-elements';
 import {Image,View,ActivityIndicator,Text} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import {checkEmailValidate} from '../../Redux/Actions/index';
 
 class LoginComponent extends React.Component{
     constructor(props){
@@ -70,18 +72,31 @@ class LoginComponent extends React.Component{
     }
 
     disableBtnLogin(){
-        console.log(this.state);
         if(this.state.userData.Email!=""&&this.state.userData.Password!=""){
-            this.setState({
-                ...this.state,
-                isDisabeBtnLogin:false
-            })
+            this.props.checkIsEmailValidate(this.state.userData.Email);
+            if(this.props.isValidEmail===true){
+                this.setState({
+                    ...this.state,
+                    isDisabeBtnLogin:false
+                });
+            }else{
+                this.setState({
+                    ...this.state,
+                    isDisabeBtnLogin:true
+                });
+            }
+
         }else{
             this.setState({
                 ...this.state,
                 isDisabeBtnLogin:true
             });
         }
+    }
+
+    validateEmaail() {
+        
+
     }
     
 
@@ -109,4 +124,19 @@ class LoginComponent extends React.Component{
         )
     }
 }
-export default LoginComponent;
+
+
+  const mapStateToProps = (state)=>{
+    return {
+        isValidEmail:state.commonreducer.isValidEmail
+    }
+}
+
+  const mapDispatchToProps = dispath =>{
+    return{
+      checkIsEmailValidate:email =>{
+        dispath(checkEmailValidate(email))
+      }
+    }
+  }
+export default connect(mapStateToProps,mapDispatchToProps)(LoginComponent);
