@@ -7,14 +7,12 @@ import {TabView,TabBar,SceneMap} from 'react-native-tab-view';
 import MusicProfile from './MusicProfile';
 import {connect} from 'react-redux';
 import DropdownAlert from 'react-native-dropdownalert';
+import {DropDownHolder} from './../../component/DropDownHolder';
 
 const initialLayout = {
     height:0,
     width:Dimensions.get('window').width
 }
-
-const FirstRoute = () => <LoginComponent />;
-const SecondRoute = () => <KeyboardAwareScrollView><RegisterComponent /></KeyboardAwareScrollView>;
 
 const styles = StyleSheet.create({
     container:{
@@ -46,16 +44,25 @@ class Profile extends Component{
         ],
       };
 
-
+      componentDidUpdate(){
+        this.dropDownAlertRef = DropDownHolder.getDropDown();
+      }
     
       _handleIndexChange = index => this.setState({ index });
     //   this.dropDownAlertRef.alertWithType('error', 'Error', "Hello");
       _renderHeader = props => <View  {...props} />;
-    
-      _renderScene = SceneMap({
-        SignIn: FirstRoute,
-        SignUp: SecondRoute,
-      });
+
+
+      _renderScene = ({ route }) => {
+        switch (route.key) {
+          case 'SignIn':
+            return <LoginComponent showDropDownAlert={this.showDropDownAlert}/>; // passing data as data prop
+          case 'SignUp':
+            return  <KeyboardAwareScrollView><RegisterComponent /></KeyboardAwareScrollView>;
+          default:
+            return null;
+        }
+      };
 
      renderTabBar = props => (
         <TabBar
@@ -67,8 +74,9 @@ class Profile extends Component{
     render(){
         if(this.props.user.isFirstTimeLogIn==true){
             return(
-                <View style={styles.container}>
+                <View style={styles.container} showDropDownAlert = {this.showDropDownAlert}>
                     <TabView
+                        
                         swipeEnabled={true}
                         navigationState={this.state}
                         renderTabBar={this.renderTabBar}
@@ -76,7 +84,7 @@ class Profile extends Component{
                         onIndexChange={this._handleIndexChange}
                         initialLayout={initialLayout}
                     />   
-                    <DropdownAlert ref={ref => this.dropDownAlertRef = ref} zIndex={10000} /> 
+                    <DropdownAlert ref={ref => DropDownHolder.setDropDown(ref)} zIndex={10000} /> 
                 </View>
                 
             )

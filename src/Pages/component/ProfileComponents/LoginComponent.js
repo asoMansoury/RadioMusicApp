@@ -4,12 +4,13 @@ import {Image,View,ActivityIndicator,Text,Animated} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import {checkEmailValidate} from '../../Redux/Actions/index';
+import {checkEmailValidate,checkMobileValide} from '../../Redux/Actions/index';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import VerificationCodeComponent from './ForgotPasswordComponent/VerificationCodeComponent';
 import {BaseApiUrl} from './../../../CommonFiles/ConstantData';
 import { Easing } from 'react-native-reanimated';
-
+import {DropDownHolder} from './../../component/DropDownHolder';
+import DropdownAlert from 'react-native-dropdownalert';
 
 class LoginComponent extends React.Component{
     constructor(props){
@@ -27,6 +28,7 @@ class LoginComponent extends React.Component{
             isSendVerificationCode:true,
             isShowCheckCode:false,
             isShowResetPassword:false,
+            isSendCodeClicked:false,
             forgotPasswordData:{
                 MobileForSendCode:"+98"
             },
@@ -35,20 +37,30 @@ class LoginComponent extends React.Component{
                 Password:''
             }
         }
-        this.showModalForgot= new Animated.Value(0);
+        this.btnSendCodeAnimation= new Animated.Value(300);
     }
 
     componentDidUpdate(){
-        this.initiAnimation();
+        this.dropDownAlertRef = DropDownHolder.getDropDown();
+        
     }
 
     initiAnimation(){
-        this.showModalForgot.setValue(0);
-        Animated.timing(this.showModalForgot,{
-            toValue:1,
-            duration:4000,
-            easing:Easing.linear
-        }).start(()=>this.initiAnimation());
+        this.btnSendCodeAnimation.setValue(300);
+        if(this.state.isSendCodeClicked){
+            Animated.timing(this.btnSendCodeAnimation,{
+                toValue:150,
+                duration:1000,
+                easing:Easing.linear
+            }).start();
+        }else{
+            Animated.timing(this.btnSendCodeAnimation,{
+                toValue:300,
+                duration:1000,
+                easing:Easing.linear
+            }).start();
+        }
+
     }
 
     renderIcon = icon =>()=>(
@@ -75,17 +87,33 @@ class LoginComponent extends React.Component{
     }
 
     _sendVerificationCode=()=>{
-
-        axios.get(BaseApiUrl+"/MessageApi/SendVerificationCode?callNumber='"+this.state.forgotPasswordData.MobileForSendCode+"'")
-        .then(res => {
+        this.props.checkIsMobileValidate(this.state.forgotPasswordData.MobileForSendCode);
+        if(this.props.isMobileValidate){
             this.setState({
                 ...this.state,
-                isSendVerificationCode:false,
-                isShowCheckCode:true,
-                isShowResetPassword:false
-    
+                isSendCodeClicked:true,
             });
-          });
+            this.initiAnimation();
+            axios.get(BaseApiUrl+"/MessageApi/SendVerificationCode?callNumber='"+this.state.forgotPasswordData.MobileForSendCode+"'")
+            .then(res => {
+                console.log(res);
+                if(res.data.isError==true){
+                    DropDownHolder.showAlert('error','خطا',res.data.Errors.Message);
+                }else{
+                    this.setState({
+                        ...this.state,
+                        isSendVerificationCode:false,
+                        isShowCheckCode:true,
+                        isShowResetPassword:false,
+                        isSendCodeClicked:false
+                    });
+                }
+
+              });
+        }else{
+            DropDownHolder.showAlert('warn','فرمت','لطفا شماره موبایل را بدرستی وارد نمایید.');
+        }
+
 
     }
 
@@ -172,10 +200,7 @@ class LoginComponent extends React.Component{
     
 
     render(){
-        const spi = this.showModalForgot.interpolate({
-            inputRange:[0,1],
-            outputRange:[0,1]
-        })
+        const btnSendCodeWidth = this.btnSendCodeAnimation;
         return(
             <KeyboardAwareScrollView>
                     <View style={{flext:1,flexDirection:'column'}}>
@@ -191,7 +216,7 @@ class LoginComponent extends React.Component{
                         </View>
                         <View style={{marginTop:10,flex:1,alignItems:'center'}}>
                           <Button  onPress={this._LoginEvent} disabled={this.state.isDisabeBtnLogin} title="SignIn"  buttonStyle={{width:250}} type="outline" ></Button>
-                          <Button title="Forgot Password" type='clear' onPress={this._forgotPasswordEvent} buttonStyle={{width:250}}></Button>
+                          <Button title="Forgot Password" type='clear' onPress={this._forgotPasswordEvent} buttonStyle={{width:400}}></Button>
                         </View>
 
                         <Overlay height={40} width={40}  overlayStyle={{opacity: 0.4, shadowOpacity: 1}} windowBackgroundColor="rgba(255, 255, 255, .5)" isVisible={this.state.loadingModal}>
@@ -200,18 +225,21 @@ class LoginComponent extends React.Component{
 
                         <Overlay containerStyle={{margin:0,padding:0}} borderRadius={3}  animationType='fade' onBackdropPress={()=>{this.setState({
                                         ...this.state,
+                                        isSendCodeClicked:false,
                                         loadingModalForgotPassword:false,
                                         isSendVerificationCode:true,
                                         isShowCheckCode:false,
                                         isShowResetPassword:false
-                                    })}} height={'50%'} width={'90%'}  overlayStyle={{opacity: 1, shadowOpacity: 1}} windowBackgroundColor="rgba(255, 255, 255, .5)" isVisible={this.state.loadingModalForgotPassword}>
+                                    });this.initiAnimation()}} height={'50%'} width={'90%'}  overlayStyle={{opacity: 1, shadowOpacity: 1}} windowBackgroundColor="rgba(255, 255, 255, .5)" isVisible={this.state.loadingModalForgotPassword}>
                             <View style={{flex:1,flexDirection:'column',margin:-10,padding:0}}>
                                 <View style={{backgroundColor:'green',height:'30%',borderRadius:3}}><Text>hello</Text></View>
 
 
                                 <VerificationCodeComponent hide={this.state.isSendVerificationCode}>
                                      <Input leftIcon={this.renderIcon('ios-call')} placeholder='Mobile' onChangeText={this.handleChangeForgotMobile} value={this.state.forgotPasswordData.MobileForSendCode}></Input>
-                                     <Button onPress={this._sendVerificationCode} title="Send Code" type='clear' buttonStyle={{width:200,justifyContent:'center'}} type='outline'></Button>
+                                     <Animated.View style={{marginTop:20,width:btnSendCodeWidth}}>
+                                        <Button onPress={this._sendVerificationCode} title="Send Code" type='clear' buttonStyle={{width:'100%',justifyContent:'center'}} type='outline'></Button>
+                                    </Animated.View>
                                 </VerificationCodeComponent>
 
                                 <VerificationCodeComponent hide={this.state.isShowCheckCode}>
@@ -227,9 +255,11 @@ class LoginComponent extends React.Component{
                                         <Button title="Reset Password"  buttonStyle={{width:200,marginTop:5,justifyContent:'center'}} type='outline'></Button>
                                 </VerificationCodeComponent>
                             </View>
+                            <DropdownAlert ref={ref => DropDownHolder.setDropDown(ref)} closeInterval={2} zIndex={10000} /> 
                         </Overlay>
                                                     
                     </View>
+                    
             </KeyboardAwareScrollView>  
         )
     }
@@ -238,7 +268,8 @@ class LoginComponent extends React.Component{
 
   const mapStateToProps = (state)=>{
     return {
-        isValidEmail:state.commonreducer.isValidEmail
+        isValidEmail:state.commonreducer.isValidEmail,
+        isMobileValidate:state.commonreducer.isValidMobile
     }
 }
 
@@ -246,6 +277,9 @@ class LoginComponent extends React.Component{
     return{
       checkIsEmailValidate:email =>{
         dispath(checkEmailValidate(email))
+      },
+      checkIsMobileValidate:mobile =>{
+          dispath(checkMobileValide(mobile))
       }
     }
   }
