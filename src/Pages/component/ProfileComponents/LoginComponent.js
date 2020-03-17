@@ -20,6 +20,7 @@ class LoginComponent extends React.Component{
         this.handleChangePassword = this.handleChangePassword.bind(this);
         this.disableBtnLogin = this.disableBtnLogin.bind(this);
         this.handleChangeForgotMobile =this.handleChangeForgotMobile.bind(this);
+        this.handleChangeForgotVerficationCode = this.handleChangeForgotVerficationCode.bind(this);
         
         this.state ={
             loadingModal:false,
@@ -30,7 +31,8 @@ class LoginComponent extends React.Component{
             isShowResetPassword:false,
             isSendCodeClicked:false,
             forgotPasswordData:{
-                MobileForSendCode:"+98"
+                MobileForSendCode:"+98",
+                verficationCode:''
             },
             userData:{
                 Email:'',
@@ -45,18 +47,20 @@ class LoginComponent extends React.Component{
         
     }
 
-    initiAnimation(){
-        this.btnSendCodeAnimation.setValue(300);
-        if(this.state.isSendCodeClicked){
+    initiAnimation(isClicked){
+        
+        if(isClicked==true){
+            this.btnSendCodeAnimation.setValue(300);
             Animated.timing(this.btnSendCodeAnimation,{
                 toValue:150,
-                duration:1000,
+                duration:800,
                 easing:Easing.linear
             }).start();
         }else{
+            this.btnSendCodeAnimation.setValue(150);
             Animated.timing(this.btnSendCodeAnimation,{
                 toValue:300,
-                duration:1000,
+                duration:3000,
                 easing:Easing.linear
             }).start();
         }
@@ -69,6 +73,9 @@ class LoginComponent extends React.Component{
 
     _LoginEvent=()=>{
         axios.post(BaseApiUrl+"/api/userapi/Login",{
+            headers: {
+                'Content-Type': 'application/json',
+            },
             userName: 'aso',
             password: '12345'
         }).then(res => {
@@ -87,19 +94,22 @@ class LoginComponent extends React.Component{
     }
 
     _sendVerificationCode=()=>{
+        try {
+
         this.props.checkIsMobileValidate(this.state.forgotPasswordData.MobileForSendCode);
         if(this.props.isMobileValidate){
             this.setState({
                 ...this.state,
                 isSendCodeClicked:true,
             });
-            this.initiAnimation();
-            axios.get(BaseApiUrl+"/MessageApi/SendVerificationCode?callNumber='"+this.state.forgotPasswordData.MobileForSendCode+"'")
+            this.initiAnimation(true);
+            axios.get(BaseApiUrl+"/MessageApi/SendVerificationCode?callNumber="+this.state.forgotPasswordData.MobileForSendCode)
             .then(res => {
-                console.log(res);
+                this.initiAnimation(false);
                 if(res.data.isError==true){
                     DropDownHolder.showAlert('error','خطا',res.data.Errors.Message);
                 }else{
+                    DropDownHolder.showAlert('success','ارسال','کد ارسال گردید.');
                     this.setState({
                         ...this.state,
                         isSendVerificationCode:false,
@@ -108,22 +118,45 @@ class LoginComponent extends React.Component{
                         isSendCodeClicked:false
                     });
                 }
-
               });
         }else{
             DropDownHolder.showAlert('warn','فرمت','لطفا شماره موبایل را بدرستی وارد نمایید.');
         }
-
-
+                    
+        } catch (error) {
+            DropDownHolder.showAlert('error','فرمت',error);
+        }
     }
 
     _CheckCode=()=>{
-        this.setState({
-            ...this.state,
-            isSendVerificationCode:false,
-            isShowCheckCode:false,
-            isShowResetPassword:true
-        })
+
+        try {
+            if(this.state.forgotPasswordData.verficationCode!=''){
+                var data = {
+                    callNumber: this.state.forgotPasswordData.MobileForSendCode.toString(),
+                    confirmationCode: this.state.forgotPasswordData.verficationCode.toString()
+                };
+                console.log("data",data);
+                axios.post(BaseApiUrl+"/MessageApi/ConfirmVerificationCode",data)
+                .then(res => {
+                    if(res.data.isError==true){
+                        DropDownHolder.showAlert('error','خطا',res.data.Errors.Message);
+                    }else{
+                        DropDownHolder.showAlert('success','اعلامیه',res.data.Errors.Message);
+                        this.setState({
+                            ...this.state,
+                            isSendVerificationCode:false,
+                            isShowCheckCode:false,
+                            isShowResetPassword:true
+                        })
+                    }
+                    }).catch(error=>console.log(error));
+                }else{
+                    DropDownHolder.showAlert('error','فرمت','data');
+                }                  
+            } catch (error) {
+                DropDownHolder.showAlert('error','فرمت',error);
+            }
     }
 
     _ResendCode=()=>{
@@ -151,7 +184,18 @@ class LoginComponent extends React.Component{
         this.setState({
             ...this.state,
             forgotPasswordData:{
+                verficationCode:this.state.forgotPasswordData.verficationCode,
                 MobileForSendCode:mobile
+            }
+        })
+    }
+
+    handleChangeForgotVerficationCode(code){
+        this.setState({
+            ...this.state,
+            forgotPasswordData:{
+                verficationCode:code,
+                MobileForSendCode:this.state.forgotPasswordData.MobileForSendCode
             }
         })
     }
@@ -244,7 +288,7 @@ class LoginComponent extends React.Component{
 
                                 <VerificationCodeComponent hide={this.state.isShowCheckCode}>
                                         <Text>Timer</Text>
-                                        <Input></Input>
+                                        <Input leftIcon={this.renderIcon('ios-call')} placeholder='Verification Code' onChangeText={this.handleChangeForgotVerficationCode}></Input>
                                         <Button title="Check Code" onPress={this._CheckCode}  buttonStyle={{width:200,marginTop:5,justifyContent:'center'}} type='outline'></Button>
                                         <Button title="Resend" onPress={this._ResendCode} type="clear" buttonStyle={{width:200,marginTop:5,justifyContent:'center'}}></Button>
                                 </VerificationCodeComponent>
