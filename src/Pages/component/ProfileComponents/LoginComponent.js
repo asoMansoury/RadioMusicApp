@@ -8,9 +8,9 @@ import {checkEmailValidate,checkMobileValide} from '../../Redux/Actions/index';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import VerificationCodeComponent from './ForgotPasswordComponent/VerificationCodeComponent';
 import {BaseApiUrl} from './../../../CommonFiles/ConstantData';
-import { Easing } from 'react-native-reanimated';
 import {DropDownHolder} from './../../component/DropDownHolder';
 import DropdownAlert from 'react-native-dropdownalert';
+import SpinnerButton from 'react-native-spinner-button';
 
 class LoginComponent extends React.Component{
     constructor(props){
@@ -21,50 +21,34 @@ class LoginComponent extends React.Component{
         this.disableBtnLogin = this.disableBtnLogin.bind(this);
         this.handleChangeForgotMobile =this.handleChangeForgotMobile.bind(this);
         this.handleChangeForgotVerficationCode = this.handleChangeForgotVerficationCode.bind(this);
-        
+        this.handleChangeForgotResetPassword = this.handleChangeForgotResetPassword.bind(this)
         this.state ={
             loadingModal:false,
             isDisabeBtnLogin:true,
             loadingModalForgotPassword:false,
             isSendVerificationCode:true,
             isShowCheckCode:false,
+            isShowCheckCodeLoading:false,
+            isShowResetPasswordLoading:false,
+
             isShowResetPassword:false,
             isSendCodeClicked:false,
             forgotPasswordData:{
                 MobileForSendCode:"+98",
-                verficationCode:''
+                verficationCode:'',
+                NewPassword:''
             },
             userData:{
                 Email:'',
                 Password:''
             }
         }
-        this.btnSendCodeAnimation= new Animated.Value(300);
+        
     }
 
     componentDidUpdate(){
-        this.dropDownAlertRef = DropDownHolder.getDropDown();
         
-    }
-
-    initiAnimation(isClicked){
         
-        if(isClicked==true){
-            this.btnSendCodeAnimation.setValue(300);
-            Animated.timing(this.btnSendCodeAnimation,{
-                toValue:150,
-                duration:800,
-                easing:Easing.linear
-            }).start();
-        }else{
-            this.btnSendCodeAnimation.setValue(150);
-            Animated.timing(this.btnSendCodeAnimation,{
-                toValue:300,
-                duration:3000,
-                easing:Easing.linear
-            }).start();
-        }
-
     }
 
     renderIcon = icon =>()=>(
@@ -72,17 +56,17 @@ class LoginComponent extends React.Component{
     )
 
     _LoginEvent=()=>{
-        axios.post(BaseApiUrl+"/api/userapi/Login",{
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            userName: 'aso',
-            password: '12345'
-        }).then(res => {
-            this.setState({
-                ...this.state,
-                loadingModal:false
-            });
+        //  this.props.showDropDownAlert('error','خطا','خطا');
+         var data = {
+            email: this.state.userData.Email,
+            password: this.state.userData.Password};
+
+        axios.post(BaseApiUrl+"/UserApi/Login",data).then(res => {
+            if(res.data.isError==true){
+                  this.props.showDropDownAlert('error','خطا',res.data.Errors.Message);
+            }else{
+                this.props.showDropDownAlert('success','خطا','عملیات با موفقیت انجام گردید');
+            }
           });
     }
 
@@ -94,22 +78,21 @@ class LoginComponent extends React.Component{
     }
 
     _sendVerificationCode=()=>{
-        try {
-
-        this.props.checkIsMobileValidate(this.state.forgotPasswordData.MobileForSendCode);
-        if(this.props.isMobileValidate){
             this.setState({
                 ...this.state,
-                isSendCodeClicked:true,
-            });
-            this.initiAnimation(true);
+                isSendCodeClicked:true
+            })
+        this.props.checkIsMobileValidate(this.state.forgotPasswordData.MobileForSendCode);
+        if(this.props.isMobileValidate){
+
             axios.get(BaseApiUrl+"/MessageApi/SendVerificationCode?callNumber="+this.state.forgotPasswordData.MobileForSendCode)
             .then(res => {
-                this.initiAnimation(false);
                 if(res.data.isError==true){
-                    DropDownHolder.showAlert('error','خطا',res.data.Errors.Message);
+                    // DropDownHolder.showAlert('error','خطا',res.data.Errors.Message);
+                    this.dropdown.alertWithType('error', 'Error', res.data.Errors.Message);
                 }else{
-                    DropDownHolder.showAlert('success','ارسال','کد ارسال گردید.');
+                    // DropDownHolder.showAlert('success','ارسال','کد ارسال گردید.');
+                    this.dropdown.alertWithType('error', 'Error', 'کد ارسال گردید.');
                     this.setState({
                         ...this.state,
                         isSendVerificationCode:false,
@@ -118,45 +101,66 @@ class LoginComponent extends React.Component{
                         isSendCodeClicked:false
                     });
                 }
+              }).catch((error)=>{
+                // DropDownHolder.showAlert('error','فرمت',error);
+                this.dropdown.alertWithType('error', 'Error', error);
+                this.setState({
+                    ...this.state,
+                    isSendCodeClicked:false
+                })
               });
         }else{
-            DropDownHolder.showAlert('warn','فرمت','لطفا شماره موبایل را بدرستی وارد نمایید.');
-        }
-                    
-        } catch (error) {
-            DropDownHolder.showAlert('error','فرمت',error);
+            // DropDownHolder.showAlert('warn','فرمت','لطفا شماره موبایل را بدرستی وارد نمایید.');
+            this.dropdown.alertWithType('error', 'Error', 'لطفا شماره موبایل را بدرستی وارد نمایید.');
+            this.setState({
+                ...this.state,
+                isSendCodeClicked:false
+            })
         }
     }
 
     _CheckCode=()=>{
-
-        try {
+            this.setState({
+                ...this.state,
+                isShowCheckCodeLoading:true
+            });
             if(this.state.forgotPasswordData.verficationCode!=''){
                 var data = {
                     callNumber: this.state.forgotPasswordData.MobileForSendCode.toString(),
                     confirmationCode: this.state.forgotPasswordData.verficationCode.toString()
                 };
-                console.log("data",data);
                 axios.post(BaseApiUrl+"/MessageApi/ConfirmVerificationCode",data)
                 .then(res => {
                     if(res.data.isError==true){
                         DropDownHolder.showAlert('error','خطا',res.data.Errors.Message);
+                        this.setState({
+                            ...this.state,
+                            isShowCheckCodeLoading:false
+                        }); 
                     }else{
                         DropDownHolder.showAlert('success','اعلامیه',res.data.Errors.Message);
                         this.setState({
                             ...this.state,
                             isSendVerificationCode:false,
                             isShowCheckCode:false,
-                            isShowResetPassword:true
+                            isShowResetPassword:true,
+                            isShowCheckCodeLoading:false
                         })
                     }
-                    }).catch(error=>console.log(error));
+                    }).catch(error=>{DropDownHolder.showAlert('error','فرمت',error);                
+                        this.setState({
+                            ...this.state,
+                            isShowCheckCodeLoading:false
+                        });  
+                    });
                 }else{
                     DropDownHolder.showAlert('error','فرمت','data');
-                }                  
-            } catch (error) {
-                DropDownHolder.showAlert('error','فرمت',error);
-            }
+                    this.setState({
+                        ...this.state,
+                        isShowCheckCodeLoading:false
+                    });  
+                } 
+               
     }
 
     _ResendCode=()=>{
@@ -165,7 +169,49 @@ class LoginComponent extends React.Component{
             isSendVerificationCode:true,
             isShowCheckCode:false,
             isShowResetPassword:false
-        })
+        });
+    }
+
+    ResetPassword =()=>{
+        this.setState({
+            ...this.state,
+            isShowResetPasswordLoading:true
+        });
+        if(this.state.forgotPasswordData.NewPassword!=''){
+            var data = {
+                callNumber: this.state.forgotPasswordData.MobileForSendCode.toString(),
+                confirmationCode: this.state.forgotPasswordData.verficationCode.toString(),
+                password:this.state.forgotPasswordData.NewPassword.toString()
+            };
+            axios.post(BaseApiUrl+"/MessageApi/ResetPassword",data)
+            .then(res => {
+                if(res.data.isError==true){
+                    DropDownHolder.showAlert('error','خطا',res.data.Errors.Message);
+                    this.setState({
+                        ...this.state,
+                        isShowResetPasswordLoading:false
+                    }); 
+                }else{
+                    DropDownHolder.showAlert('success','اعلامیه',res.data.Errors.Message);
+                    this.setState({
+                        ...this.state,
+                        loadingModalForgotPassword:false
+                    })
+                }
+                }).catch(error=>{DropDownHolder.showAlert('error','فرمت',error);                
+                    this.setState({
+                        ...this.state,
+                        isShowResetPasswordLoading:false
+                    });  
+                });
+            }else{
+                DropDownHolder.showAlert('error','فرمت','data');
+                this.setState({
+                    ...this.state,
+                    isShowCheckCodeLoading:false,
+                    isShowResetPasswordLoading:false
+                });  
+            } 
     }
 
       handleChangeEmail(email){
@@ -195,6 +241,17 @@ class LoginComponent extends React.Component{
             ...this.state,
             forgotPasswordData:{
                 verficationCode:code,
+                MobileForSendCode:this.state.forgotPasswordData.MobileForSendCode
+            }
+        })
+    }
+
+    handleChangeForgotResetPassword(password){
+        this.setState({
+            ...this.state,
+            forgotPasswordData:{
+                verficationCode:this.state.forgotPasswordData.verficationCode,
+                NewPassword:password,
                 MobileForSendCode:this.state.forgotPasswordData.MobileForSendCode
             }
         })
@@ -234,17 +291,10 @@ class LoginComponent extends React.Component{
             });
         }
     }
-
-    validateEmaail() {
-        
-
-    }
-
     
     
 
     render(){
-        const btnSendCodeWidth = this.btnSendCodeAnimation;
         return(
             <KeyboardAwareScrollView>
                     <View style={{flext:1,flexDirection:'column'}}>
@@ -274,34 +324,66 @@ class LoginComponent extends React.Component{
                                         isSendVerificationCode:true,
                                         isShowCheckCode:false,
                                         isShowResetPassword:false
-                                    });this.initiAnimation()}} height={'50%'} width={'90%'}  overlayStyle={{opacity: 1, shadowOpacity: 1}} windowBackgroundColor="rgba(255, 255, 255, .5)" isVisible={this.state.loadingModalForgotPassword}>
+                                    });}} height={'50%'} width={'90%'}  overlayStyle={{opacity: 1, shadowOpacity: 1}} windowBackgroundColor="rgba(255, 255, 255, .5)" isVisible={this.state.loadingModalForgotPassword}>
                             <View style={{flex:1,flexDirection:'column',margin:-10,padding:0}}>
                                 <View style={{backgroundColor:'green',height:'30%',borderRadius:3}}><Text>hello</Text></View>
 
 
                                 <VerificationCodeComponent hide={this.state.isSendVerificationCode}>
                                      <Input leftIcon={this.renderIcon('ios-call')} placeholder='Mobile' onChangeText={this.handleChangeForgotMobile} value={this.state.forgotPasswordData.MobileForSendCode}></Input>
-                                     <Animated.View style={{marginTop:20,width:btnSendCodeWidth}}>
-                                        <Button onPress={this._sendVerificationCode} title="Send Code" type='clear' buttonStyle={{width:'100%',justifyContent:'center'}} type='outline'></Button>
-                                    </Animated.View>
+                                     <View style={{marginTop:20,height:50,width:250}}>
+                                        <SpinnerButton isLoading={this.state.isSendCodeClicked} spinnerType='BarIndicator'  onPress={this._sendVerificationCode} buttonStyle={{
+                                                                                        justifyContent: 'center',
+                                                                                        alignItems: 'center',
+                                                                                        width:'100%',
+                                                                                        borderRadius:5,
+                                                                                        height: 50,
+                                                                                        backgroundColor: '#25CAC6',
+                                                                                    }}  indicatorCount={10}>
+                                            <Text>Send</Text>
+                                        </SpinnerButton>
+                                     </View>
+
                                 </VerificationCodeComponent>
 
                                 <VerificationCodeComponent hide={this.state.isShowCheckCode}>
                                         <Text>Timer</Text>
                                         <Input leftIcon={this.renderIcon('ios-call')} placeholder='Verification Code' onChangeText={this.handleChangeForgotVerficationCode}></Input>
-                                        <Button title="Check Code" onPress={this._CheckCode}  buttonStyle={{width:200,marginTop:5,justifyContent:'center'}} type='outline'></Button>
+                                        <View style={{marginTop:20,height:50,width:250}}>
+                                            <SpinnerButton isLoading={this.state.isShowCheckCodeLoading} spinnerType='BarIndicator'  onPress={this._CheckCode} buttonStyle={{
+                                                                                        justifyContent: 'center',
+                                                                                        alignItems: 'center',
+                                                                                        width:'100%',
+                                                                                        borderRadius:5,
+                                                                                        height: 50,
+                                                                                        backgroundColor: '#25CAC6',
+                                                                                    }}  indicatorCount={10}>
+                                                <Text>Check Code</Text>
+                                            </SpinnerButton>
+                                        </View>
                                         <Button title="Resend" onPress={this._ResendCode} type="clear" buttonStyle={{width:200,marginTop:5,justifyContent:'center'}}></Button>
                                 </VerificationCodeComponent>
 
                                 
                                 <VerificationCodeComponent hide={this.state.isShowResetPassword}>
-                                        <Input></Input>
-                                        <Button title="Reset Password"  buttonStyle={{width:200,marginTop:5,justifyContent:'center'}} type='outline'></Button>
+                                        <Input leftIcon={this.renderIcon('ios-call')} placeholder='New Password' onChangeText={this.handleChangeForgotResetPassword}></Input>
+                                        <View style={{marginTop:20,height:50,width:250}}>
+                                            <SpinnerButton isLoading={this.state.isShowResetPasswordLoading} spinnerType='BarIndicator'  onPress={this.ResetPassword} buttonStyle={{
+                                                                                        justifyContent: 'center',
+                                                                                        alignItems: 'center',
+                                                                                        width:'100%',
+                                                                                        borderRadius:5,
+                                                                                        height: 50,
+                                                                                        backgroundColor: '#25CAC6',
+                                                                                    }}  indicatorCount={10}>
+                                                <Text>Reset Password</Text>
+                                            </SpinnerButton>
+                                        </View>
                                 </VerificationCodeComponent>
                             </View>
-                            <DropdownAlert ref={ref => DropDownHolder.setDropDown(ref)} closeInterval={2} zIndex={10000} /> 
+                            <DropdownAlert ref={ref => this.dropdown  = ref} closeInterval={1500} zIndex={2000} /> 
                         </Overlay>
-                                                    
+                                              
                     </View>
                     
             </KeyboardAwareScrollView>  

@@ -1,6 +1,14 @@
 export class DropDownHolder {
     static dropDown;
 
+    static isShowDropDown;
+    static setIsShowDropDown(value){
+        this.isShowDropDown=value;
+    }
+    static getIsShowDropDown(){
+        return this.isShowDropDown;
+    }
+    
     static setDropDown(dropDown) {
         this.dropDown = dropDown;
     }

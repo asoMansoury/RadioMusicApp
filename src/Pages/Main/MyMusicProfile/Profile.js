@@ -33,10 +33,10 @@ const styles = StyleSheet.create({
 class Profile extends Component{
     constructor(props){
         super(props);
-    }
-
-    
+        this.showDropDownAlert = this.showDropDownAlert.bind(this);
+    } 
     state = {
+      isShowDropDown:false,
         index: 0,
         routes: [
           { key: 'SignIn', title: 'SignIn' },
@@ -47,16 +47,19 @@ class Profile extends Component{
       componentDidUpdate(){
         this.dropDownAlertRef = DropDownHolder.getDropDown();
       }
+
+      showDropDownAlert(errorType,errorTitle,errorMessage){
+          DropDownHolder.showAlert(errorType, errorTitle, errorMessage);
+      }
     
       _handleIndexChange = index => this.setState({ index });
-    //   this.dropDownAlertRef.alertWithType('error', 'Error', "Hello");
       _renderHeader = props => <View  {...props} />;
 
 
       _renderScene = ({ route }) => {
         switch (route.key) {
           case 'SignIn':
-            return <LoginComponent showDropDownAlert={this.showDropDownAlert}/>; // passing data as data prop
+            return <LoginComponent  showDropDownAlert={this.showDropDownAlert}/>; // passing data as data prop
           case 'SignUp':
             return  <KeyboardAwareScrollView><RegisterComponent /></KeyboardAwareScrollView>;
           default:
@@ -84,7 +87,7 @@ class Profile extends Component{
                         onIndexChange={this._handleIndexChange}
                         initialLayout={initialLayout}
                     />   
-                    <DropdownAlert ref={ref => DropDownHolder.setDropDown(ref)} zIndex={10000} /> 
+                    <DropdownAlert ref={ref => DropDownHolder.setDropDown(ref)} closeInterval={2000} zIndex={10000} /> 
                 </View>
                 
             )
