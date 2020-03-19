@@ -1,6 +1,6 @@
-import {SET_USER_LOGGER,SET_EMAIL_VALIDATE,SET_MOBILE_VALIDATE} from './type';
-export const setUserLogged =(isLogged) =>({
-    type:SET_USER_LOGGER,
+import {SET_IS_FIRST_TIME_RUNNING,SET_EMAIL_VALIDATE,SET_MOBILE_VALIDATE,SET_IS_USER_LOGGED} from './type';
+export const setUserRunning =(isLogged) =>({
+    type:SET_IS_FIRST_TIME_RUNNING,
     payload:isLogged
 });
 
@@ -12,4 +12,9 @@ export const checkEmailValidate =(email)=>({
 export const checkMobileValide =(mobile)=>({
     type:SET_MOBILE_VALIDATE,
     payload:mobile
+})
+
+export const isUserLogged=(value)=>({
+    type:SET_IS_USER_LOGGED,
+    payload:value
 })

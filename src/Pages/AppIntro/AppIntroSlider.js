@@ -5,7 +5,7 @@ import { initialAppStyle } from '../../CommonFiles/Style.js';
 import Index from '../Authentication/index';
 import Main from './../Main/Main';
 import { connect } from 'react-redux';
-import {setUserLogged} from '../Redux/Actions/index';
+
 
 const slides = [
   {
@@ -37,7 +37,7 @@ const slides = [
     super(props);
 
     
-    if(this.props.user.isFirstTimeLogIn==true)
+    if(this.props.user.isFirstTimeRunning==true)
       this.props.navigation.replace("MainPage");
   }
   _renderItem = (item) => {
@@ -52,12 +52,12 @@ const slides = [
   }
 
   _onDone = () => {
-      this.props.setUserIsFirstTimeLogin(false);
+      this.props.setUserIsFirstTimeRunning(false);
       this.props.navigation.replace("MainPage");
   }
 
   render() {
-    if(this.props.user.isFirstTimeLogIn){
+    if(this.props.user.isFirstTimeRunning){
       return <AppIntroSlider renderItem={this._renderItem} slides={slides} onDone={this._onDone} />;
     }else{
      return <Main></Main>
@@ -73,8 +73,8 @@ const mapStateToProps = (state)=>{
 
 const mapDispatchToProps = dispath =>{
   return{
-    setUserIsFirstTimeLogin:isLogged =>{
-      dispath(setUserLogged(isLogged))
+    setUserIsFirstTimeRunning:isLogged =>{
+      dispath(setUserRunning(isLogged))
     }
   }
 }

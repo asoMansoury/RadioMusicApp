@@ -2,7 +2,8 @@ import {SET_EMAIL_VALIDATE,SET_MOBILE_VALIDATE} from './../Actions/type';
 
 const initialState = {
     isValidEmail:false,
-    isValidMobile:false
+    isValidMobile:false,
+    isUserLogged:false
 }
 export default commonreducer = (state = initialState , action={})=>{
     const {payload} = action;
@@ -14,12 +15,14 @@ export default commonreducer = (state = initialState , action={})=>{
             if(reg.test(payload) === true)
             {
                  result = {
+                    ...initialState,
                     isValidEmail:true,
                     isValidMobile:false
                 };
             }
             else {
                  result = {
+                    ...initialState,
                     isValidEmail:false,
                     isValidMobile:false
                 };
@@ -30,17 +33,20 @@ export default commonreducer = (state = initialState , action={})=>{
             if(regMobile.test(payload) === true)
             {
                  result = {
+                     ...initialState,
                     isValidEmail:false,
                     isValidMobile:true
                 };
             }
             else {
                  result = {
+                    ...initialState,
                     isValidEmail:false,
                     isValidMobile:false
                 };
             }
             return result;
+        
         default:
             return state;
     }

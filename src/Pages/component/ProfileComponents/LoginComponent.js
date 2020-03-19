@@ -1,16 +1,17 @@
 import React from 'react';
 import {Input,Button,Overlay} from 'react-native-elements';
-import {Image,View,ActivityIndicator,Text,Animated} from 'react-native';
+import {Image,View,ActivityIndicator,Text} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import {checkEmailValidate,checkMobileValide} from '../../Redux/Actions/index';
+import {checkEmailValidate,checkMobileValide,isUserLogged} from '../../Redux/Actions/index';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import VerificationCodeComponent from './ForgotPasswordComponent/VerificationCodeComponent';
 import {BaseApiUrl} from './../../../CommonFiles/ConstantData';
 import {DropDownHolder} from './../../component/DropDownHolder';
 import DropdownAlert from 'react-native-dropdownalert';
 import SpinnerButton from 'react-native-spinner-button';
+import {Validation} from './../../../CommonFiles/Validation';
 
 class LoginComponent extends React.Component{
     constructor(props){
@@ -43,11 +44,9 @@ class LoginComponent extends React.Component{
                 Password:''
             }
         }
-        
     }
 
     componentDidUpdate(){
-        
         
     }
 
@@ -56,16 +55,16 @@ class LoginComponent extends React.Component{
     )
 
     _LoginEvent=()=>{
-        //  this.props.showDropDownAlert('error','خطا','خطا');
          var data = {
             email: this.state.userData.Email,
             password: this.state.userData.Password};
-
-        axios.post(BaseApiUrl+"/UserApi/Login",data).then(res => {
+            axios.post(BaseApiUrl+"/UserApi/Login",data).then(res => {
             if(res.data.isError==true){
                   this.props.showDropDownAlert('error','خطا',res.data.Errors.Message);
+                  this.props.setUserLogging(false);
             }else{
                 this.props.showDropDownAlert('success','خطا','عملیات با موفقیت انجام گردید');
+                this.props.setUserLogging(true);
             }
           });
     }
@@ -81,17 +80,14 @@ class LoginComponent extends React.Component{
             this.setState({
                 ...this.state,
                 isSendCodeClicked:true
-            })
-        this.props.checkIsMobileValidate(this.state.forgotPasswordData.MobileForSendCode);
-        if(this.props.isMobileValidate){
-
+            });
+        const {MobileForSendCode} = this.state.forgotPasswordData;
+        if(Validation.checkMobile(MobileForSendCode)){
             axios.get(BaseApiUrl+"/MessageApi/SendVerificationCode?callNumber="+this.state.forgotPasswordData.MobileForSendCode)
             .then(res => {
                 if(res.data.isError==true){
-                    // DropDownHolder.showAlert('error','خطا',res.data.Errors.Message);
                     this.dropdown.alertWithType('error', 'Error', res.data.Errors.Message);
                 }else{
-                    // DropDownHolder.showAlert('success','ارسال','کد ارسال گردید.');
                     this.dropdown.alertWithType('error', 'Error', 'کد ارسال گردید.');
                     this.setState({
                         ...this.state,
@@ -102,7 +98,6 @@ class LoginComponent extends React.Component{
                     });
                 }
               }).catch((error)=>{
-                // DropDownHolder.showAlert('error','فرمت',error);
                 this.dropdown.alertWithType('error', 'Error', error);
                 this.setState({
                     ...this.state,
@@ -110,7 +105,6 @@ class LoginComponent extends React.Component{
                 })
               });
         }else{
-            // DropDownHolder.showAlert('warn','فرمت','لطفا شماره موبایل را بدرستی وارد نمایید.');
             this.dropdown.alertWithType('error', 'Error', 'لطفا شماره موبایل را بدرستی وارد نمایید.');
             this.setState({
                 ...this.state,
@@ -124,10 +118,11 @@ class LoginComponent extends React.Component{
                 ...this.state,
                 isShowCheckCodeLoading:true
             });
-            if(this.state.forgotPasswordData.verficationCode!=''){
+            const {verficationCode,MobileForSendCode}= this.state.forgotPasswordData;
+            if(verficationCode!=''){
                 var data = {
-                    callNumber: this.state.forgotPasswordData.MobileForSendCode.toString(),
-                    confirmationCode: this.state.forgotPasswordData.verficationCode.toString()
+                    callNumber: MobileForSendCode,
+                    confirmationCode: verficationCode
                 };
                 axios.post(BaseApiUrl+"/MessageApi/ConfirmVerificationCode",data)
                 .then(res => {
@@ -177,11 +172,12 @@ class LoginComponent extends React.Component{
             ...this.state,
             isShowResetPasswordLoading:true
         });
-        if(this.state.forgotPasswordData.NewPassword!=''){
+        const {NewPassword,MobileForSendCode,verficationCode} = this.state.forgotPasswordData;
+        if(NewPassword!=''){
             var data = {
-                callNumber: this.state.forgotPasswordData.MobileForSendCode.toString(),
-                confirmationCode: this.state.forgotPasswordData.verficationCode.toString(),
-                password:this.state.forgotPasswordData.NewPassword.toString()
+                callNumber: MobileForSendCode,
+                confirmationCode: verficationCode,
+                password:NewPassword
             };
             axios.post(BaseApiUrl+"/MessageApi/ResetPassword",data)
             .then(res => {
@@ -270,9 +266,9 @@ class LoginComponent extends React.Component{
     }
 
     disableBtnLogin(){
-        if(this.state.userData.Email!=""&&this.state.userData.Password!=""){
-            this.props.checkIsEmailValidate(this.state.userData.Email);
-            if(this.props.isValidEmail===true){
+        const {Email,Password} = this.state.userData;
+        if(Email!=""&&Password!=""){
+            if(Validation.validEmail(Email)==true){
                 this.setState({
                     ...this.state,
                     isDisabeBtnLogin:false
@@ -331,7 +327,7 @@ class LoginComponent extends React.Component{
 
                                 <VerificationCodeComponent hide={this.state.isSendVerificationCode}>
                                      <Input leftIcon={this.renderIcon('ios-call')} placeholder='Mobile' onChangeText={this.handleChangeForgotMobile} value={this.state.forgotPasswordData.MobileForSendCode}></Input>
-                                     <View style={{marginTop:20,height:50,width:250}}>
+                                     <View style={{marginTop:20,height:50,width:'80%'}}>
                                         <SpinnerButton isLoading={this.state.isSendCodeClicked} spinnerType='BarIndicator'  onPress={this._sendVerificationCode} buttonStyle={{
                                                                                         justifyContent: 'center',
                                                                                         alignItems: 'center',
@@ -349,7 +345,7 @@ class LoginComponent extends React.Component{
                                 <VerificationCodeComponent hide={this.state.isShowCheckCode}>
                                         <Text>Timer</Text>
                                         <Input leftIcon={this.renderIcon('ios-call')} placeholder='Verification Code' onChangeText={this.handleChangeForgotVerficationCode}></Input>
-                                        <View style={{marginTop:20,height:50,width:250}}>
+                                        <View style={{marginTop:20,height:50,width:'80%'}}>
                                             <SpinnerButton isLoading={this.state.isShowCheckCodeLoading} spinnerType='BarIndicator'  onPress={this._CheckCode} buttonStyle={{
                                                                                         justifyContent: 'center',
                                                                                         alignItems: 'center',
@@ -367,7 +363,7 @@ class LoginComponent extends React.Component{
                                 
                                 <VerificationCodeComponent hide={this.state.isShowResetPassword}>
                                         <Input leftIcon={this.renderIcon('ios-call')} placeholder='New Password' onChangeText={this.handleChangeForgotResetPassword}></Input>
-                                        <View style={{marginTop:20,height:50,width:250}}>
+                                        <View style={{marginTop:20,height:50,width:'80%'}}>
                                             <SpinnerButton isLoading={this.state.isShowResetPasswordLoading} spinnerType='BarIndicator'  onPress={this.ResetPassword} buttonStyle={{
                                                                                         justifyContent: 'center',
                                                                                         alignItems: 'center',
@@ -394,19 +390,16 @@ class LoginComponent extends React.Component{
 
   const mapStateToProps = (state)=>{
     return {
-        isValidEmail:state.commonreducer.isValidEmail,
-        isMobileValidate:state.commonreducer.isValidMobile
+        isUserLogged:state.user.isUserLogged
     }
 }
 
   const mapDispatchToProps = dispath =>{
     return{
-      checkIsEmailValidate:email =>{
-        dispath(checkEmailValidate(email))
-      },
-      checkIsMobileValidate:mobile =>{
-          dispath(checkMobileValide(mobile))
+      setUserLogging:value=>{
+          dispath(isUserLogged(value))
       }
     }
   }
+
 export default connect(mapStateToProps,mapDispatchToProps)(LoginComponent);

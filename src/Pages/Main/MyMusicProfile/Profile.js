@@ -34,6 +34,7 @@ class Profile extends Component{
     constructor(props){
         super(props);
         this.showDropDownAlert = this.showDropDownAlert.bind(this);
+        
     } 
     state = {
       isShowDropDown:false,
@@ -59,9 +60,9 @@ class Profile extends Component{
       _renderScene = ({ route }) => {
         switch (route.key) {
           case 'SignIn':
-            return <LoginComponent  showDropDownAlert={this.showDropDownAlert}/>; // passing data as data prop
+            return <LoginComponent   showDropDownAlert={this.showDropDownAlert}/>; 
           case 'SignUp':
-            return  <KeyboardAwareScrollView><RegisterComponent /></KeyboardAwareScrollView>;
+            return  <KeyboardAwareScrollView><RegisterComponent   showDropDownAlert={this.showDropDownAlert}/></KeyboardAwareScrollView>;
           default:
             return null;
         }
@@ -75,7 +76,7 @@ class Profile extends Component{
         />
       );
     render(){
-        if(this.props.user.isFirstTimeLogIn==true){
+        if(this.props.user.isUserLogged==false){
             return(
                 <View style={styles.container} showDropDownAlert = {this.showDropDownAlert}>
                     <TabView
@@ -106,8 +107,26 @@ class Profile extends Component{
 
 const mapstatesToProps =(state)=>{
     return {
-        user:state.user
+        user:state.user,
+        isValidEmail:state.commonreducer.isValidEmail,
+        isMobileValidate:state.commonreducer.isValidMobile,
+        isUserLogged:state.user.isUserLogged
     }
 }
 
-export default connect(mapstatesToProps,null)(Profile);
+const mapDispatchToProps = dispath =>{
+  return{
+    checkIsEmailValidate:email =>{
+      dispath(checkEmailValidate(email))
+    },
+    checkIsMobileValidate:mobile =>{
+        dispath(checkMobileValide(mobile))
+    },
+    setUserLogging:value=>{
+        dispath(isUserLogged(value))
+    }
+
+  }
+}
+
+export default connect(mapstatesToProps,mapDispatchToProps)(Profile);
