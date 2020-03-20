@@ -4,7 +4,7 @@ import {Image,View,ActivityIndicator,Text} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import {checkEmailValidate,checkMobileValide,isUserLogged} from '../../Redux/Actions/index';
+import {saveUserInformation,isUserLogged} from '../../Redux/Actions/index';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import VerificationCodeComponent from './ForgotPasswordComponent/VerificationCodeComponent';
 import {BaseApiUrl} from './../../../CommonFiles/ConstantData';
@@ -65,6 +65,12 @@ class LoginComponent extends React.Component{
             }else{
                 this.props.showDropDownAlert('success','خطا','عملیات با موفقیت انجام گردید');
                 this.props.setUserLogging(true);
+                const userInformation={
+                    mobile:res.data.Mobile,
+                    userName:res.data.userName,
+                    email:res.data.email
+                }
+                this.props.saveUserInformation(userInformation);
             }
           });
     }
@@ -389,8 +395,10 @@ class LoginComponent extends React.Component{
 
 
   const mapStateToProps = (state)=>{
+      console.log("State : ",state)
     return {
-        isUserLogged:state.user.isUserLogged
+        isUserLogged:state.user.isUserLogged,
+        userInformation:state.user.userInformation
     }
 }
 
@@ -398,6 +406,9 @@ class LoginComponent extends React.Component{
     return{
       setUserLogging:value=>{
           dispath(isUserLogged(value))
+      },
+      saveUserInformation:value=>{
+          dispath(saveUserInformation(value))
       }
     }
   }

@@ -135,8 +135,16 @@ class RegisterComponent extends React.Component{
                 });
             if(res.data.isError==true){
                   this.props.showDropDownAlert('error','خطا',res.data.Errors.Message);
+                  this.props.setUserLogging(false);
             }else{
                 this.props.showDropDownAlert('success','خطا','عملیات با موفقیت انجام گردید');
+                this.props.setUserLogging(true);
+                const userInformation={
+                    mobile:data.Mobile,
+                    userName:data.userName,
+                    email:data.email
+                }
+                this.props.saveUserInformation(userInformation);
             }
           });
     }
@@ -212,7 +220,8 @@ class RegisterComponent extends React.Component{
 
 const mapstatesToProps =(state)=>{
     return {
-        user:state.user
+        isUserLogged:state.user.isUserLogged,
+        userInformation:state.user.userInformation
     }
 }
 
@@ -220,6 +229,9 @@ const mapDispatchToProps = dispath =>{
   return{
     setUserLogging:value=>{
         dispath(isUserLogged(value))
+    },
+    saveUserInformation:value=>{
+        dispath(saveUserInformation(value))
     }
 
   }
