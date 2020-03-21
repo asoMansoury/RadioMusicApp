@@ -8,7 +8,7 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
-import { Text ,View,Animated, StatusBar,ActivityIndicator, Image, Platform, StyleSheet,Dimensions, Linking, TouchableOpacity} from 'react-native';
+import { Text ,View,Platform, StyleSheet,Dimensions, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {isUserLogged} from '../../Redux/Actions/index';
 import {BaseApiUrl} from './../../../CommonFiles/ConstantData';
@@ -16,8 +16,6 @@ import SpinnerButton from 'react-native-spinner-button';
 import {initialAppStyle} from './../../../CommonFiles/Style';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import {Validation} from './../../../CommonFiles/Validation';
-import ParallaxScrollView from '../../CommonComponents/ParallaxScrollView/ParallaxScrollView';
 import RNParallax from './../../CommonComponents/RNParallax/RNParallax';
 
 const IS_IPHONE_X = Dimensions.get('window').height === 812 || Dimensions.get('window').height === 896;
@@ -32,8 +30,9 @@ const COLORS = {
   }
 
 const images = {
-  background: 'https://roocket.ir/public/images/2018/4/10/nodejs-2.png',
-};
+    uri:
+      'https://roocket.ir/public/images/2018/4/10/nodejs-2.png',
+  };
 
 const styles = StyleSheet.create({
   navContainer: {
@@ -181,13 +180,20 @@ class MusicProfile extends Component{
             // <ParallaxScrollView  >
             <View style={{flex:1}}>
             <RNParallax
+            useNativeDriver={true}
+            alwaysShowTitle={1}
+            isBackgroundScalable={true}
               headerMinHeight={HEADER_HEIGHT}
               headerMaxHeight={250}
               extraScrollHeight={20}
-              navbarColor={'green'}
+              navbarColor={'#388E3C'}
               title="Parallax Header ~"
               titleStyle={styles.titleStyle}
-              backgroundImage={images.background}
+              backgroundImage={{
+                uri:
+                  'https://roocket.ir/public/images/2018/4/10/nodejs-2.png',
+              }}
+              backgroundColor="388E3C"
               backgroundImageScale={1.2}
               renderNavBar={this.renderNavBar}
               renderContent={this.renderContent}

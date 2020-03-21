@@ -196,7 +196,6 @@ class RNParallax extends Component {
     const imageOpacity = this.getImageOpacity();
     const imageTranslate = this.getImageTranslate();
     const imageScale = this.getImageScale();
-
     return (
       <Animated.Image
         style={[
@@ -263,7 +262,7 @@ class RNParallax extends Component {
             backgroundColor: backgroundImage ? 'transparent' : backgroundColor,
           },
         ]}>
-        {backgroundImage && this.renderBackgroundImage()}
+        {this.renderBackgroundImage()}
         {!backgroundImage && this.renderPlainBackground()}
       </Animated.View>
     );
@@ -339,7 +338,7 @@ class RNParallax extends Component {
   }
 
   render() {
-    const {navbarColor, statusBarColor, containerStyle} = this.props;
+    const {navbarColor, statusBarColor, containerStyle,backgroundImage} = this.props;
     return (
       <View style={[styles.container, containerStyle]}>
         <StatusBar backgroundColor={statusBarColor || navbarColor} />
