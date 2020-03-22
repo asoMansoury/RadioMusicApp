@@ -9,30 +9,19 @@
 /* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
 import { Text ,View,Platform, StyleSheet,Dimensions, TouchableOpacity} from 'react-native';
+import {createAppContainer} from 'react-navigation'
+import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {isUserLogged} from '../../Redux/Actions/index';
-import {BaseApiUrl} from './../../../CommonFiles/ConstantData';
+import {BaseApiUrl,mainColor,platformWidth,IS_IPHONE_X,STATUS_BAR_HEIGHT,HEADER_HEIGHT,NAV_BAR_HEIGHT} from './../../../CommonFiles/ConstantData';
 import SpinnerButton from 'react-native-spinner-button';
 import {initialAppStyle} from './../../../CommonFiles/Style';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import RNParallax from './../../CommonComponents/RNParallax/RNParallax';
-
-const IS_IPHONE_X = Dimensions.get('window').height === 812 || Dimensions.get('window').height === 896;
-const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
-const HEADER_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 88 : 64) : 64;
-const NAV_BAR_HEIGHT = HEADER_HEIGHT - STATUS_BAR_HEIGHT;
-const COLORS = {
-    white: '#fff',
-    black: '#000',
-    transparent:'transparent'
-    // your colors
-  }
-
-const images = {
-    uri:
-      'https://roocket.ir/public/images/2018/4/10/nodejs-2.png',
-  };
+import Edit from './pages/Edit';
+import Setting from './pages/Setting';
+import {AppContainer} from './ContentProfileTabView';
 
 const styles = StyleSheet.create({
   navContainer: {
@@ -57,6 +46,9 @@ const styles = StyleSheet.create({
   },
 });
 
+
+
+
 class MusicProfile extends Component{
     constructor(props){
         super(props);
@@ -64,100 +56,7 @@ class MusicProfile extends Component{
     }
 
     renderContent=()=>{
-        return(
-            <View>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-                <Text>renderContent</Text>
-            </View>
-        )
+        return <AppContainer></AppContainer>
     }
 
 
@@ -180,14 +79,14 @@ class MusicProfile extends Component{
             // <ParallaxScrollView  >
             <View style={{flex:1}}>
             <RNParallax
-            useNativeDriver={true}
-            alwaysShowTitle={1}
-            isBackgroundScalable={true}
+              useNativeDriver={true}
+              alwaysShowTitle={1}
+              isBackgroundScalable={true}
               headerMinHeight={HEADER_HEIGHT}
               headerMaxHeight={250}
               extraScrollHeight={20}
               navbarColor={'#388E3C'}
-              title="Parallax Header ~"
+              title={this.props.userInformation.userName}
               titleStyle={styles.titleStyle}
               backgroundImage={{
                 uri:

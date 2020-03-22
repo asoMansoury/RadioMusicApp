@@ -1,11 +1,10 @@
+/* eslint-disable no-undef */
 import React, {Component} from 'react';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import BottomNavigation, {
-  ShiftingTab,
   FullTab,
 } from 'react-native-material-bottom-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import MusicProfile from './MyMusicProfile/MusicProfile';
 import Browse from './Browse/Browse';
 import Playlists from './Playlists/Playlists';
 import Search from './Search/Search';
@@ -13,6 +12,9 @@ import Home from './Home/Home';
 import Profile from './MyMusicProfile/Profile';
 
 export default class Main extends Component {
+  constructor(props) {
+    super(props);
+  }
   tabs = [
     {
       key: 'Home',
@@ -50,11 +52,9 @@ export default class Main extends Component {
       pressColor: 'rgba(255, 255, 255, 0.16)',
     },
   ];
-
   state = {
     activeTab: 'MusicProfile',
   };
-
   renderIcon = icon => ({isActive}) => (
     <Ionicons
       name={icon}

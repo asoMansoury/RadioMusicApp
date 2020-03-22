@@ -16,12 +16,6 @@ const RootNavigator = createStackNavigator(
         header: null,
       },
     },
-    Authentication: {
-      screen: Index,
-      navigationOptions: {
-        header: null,
-      },
-    },
   },
   {
     initialRouteName: 'AppIntro',

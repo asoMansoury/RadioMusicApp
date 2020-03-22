@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {Input, Button, Overlay} from 'react-native-elements';
@@ -372,7 +373,7 @@ class LoginComponent extends React.Component {
                 isLoading={this.state.isShowSignInLoading}
                 spinnerType={spinnerBtnConfig.spinnerType}
                 onPress={this._LoginEvent}
-                buttonStyle={initialAppStyle.spinnerBtnStyle}
+                buttonStyle={[initialAppStyle.spinnerBtnStyle, {height: 50}]}
                 indicatorCount={spinnerBtnConfig.indicatorCount}>
                 <Text>Sign In</Text>
               </SpinnerButton>
@@ -437,20 +438,17 @@ class LoginComponent extends React.Component {
                   onChangeText={this.handleChangeForgotMobile}
                   value={this.state.forgotPasswordData.MobileForSendCode}
                 />
-                <View style={{marginTop: 20, height: 50, width: '80%'}}>
+                <View
+                  style={[initialAppStyle.spinnerViewStyle, {width: '80%'}]}>
                   <SpinnerButton
                     isLoading={this.state.isSendCodeClicked}
-                    spinnerType="BarIndicator"
+                    spinnerType={spinnerBtnConfig.spinnerType}
                     onPress={this._sendVerificationCode}
-                    buttonStyle={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '100%',
-                      borderRadius: 5,
-                      height: 50,
-                      backgroundColor: '#25CAC6',
-                    }}
-                    indicatorCount={10}>
+                    buttonStyle={[
+                      initialAppStyle.spinnerBtnStyle,
+                      {height: 50},
+                    ]}
+                    indicatorCount={spinnerBtnConfig.indicatorCount}>
                     <Text>Send</Text>
                   </SpinnerButton>
                 </View>
@@ -463,20 +461,17 @@ class LoginComponent extends React.Component {
                   placeholder="Verification Code"
                   onChangeText={this.handleChangeForgotVerficationCode}
                 />
-                <View style={{marginTop: 20, height: 50, width: '80%'}}>
+                <View
+                  style={[initialAppStyle.spinnerViewStyle, {width: '80%'}]}>
                   <SpinnerButton
                     isLoading={this.state.isShowCheckCodeLoading}
-                    spinnerType="BarIndicator"
+                    spinnerType={spinnerBtnConfig.spinnerType}
                     onPress={this._CheckCode}
-                    buttonStyle={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '100%',
-                      borderRadius: 5,
-                      height: 50,
-                      backgroundColor: '#25CAC6',
-                    }}
-                    indicatorCount={10}>
+                    buttonStyle={[
+                      initialAppStyle.spinnerBtnStyle,
+                      {height: 50},
+                    ]}
+                    indicatorCount={spinnerBtnConfig.indicatorCount}>
                     <Text>Check Code</Text>
                   </SpinnerButton>
                 </View>
@@ -498,20 +493,17 @@ class LoginComponent extends React.Component {
                   placeholder="New Password"
                   onChangeText={this.handleChangeForgotResetPassword}
                 />
-                <View style={{marginTop: 20, height: 50, width: '80%'}}>
+                <View
+                  style={[initialAppStyle.spinnerViewStyle, {width: '80%'}]}>
                   <SpinnerButton
                     isLoading={this.state.isShowResetPasswordLoading}
-                    spinnerType="BarIndicator"
+                    spinnerType={spinnerBtnConfig.spinnerType}
                     onPress={this.ResetPassword}
-                    buttonStyle={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '100%',
-                      borderRadius: 5,
-                      height: 50,
-                      backgroundColor: '#25CAC6',
-                    }}
-                    indicatorCount={10}>
+                    buttonStyle={[
+                      initialAppStyle.spinnerBtnStyle,
+                      {height: 50},
+                    ]}
+                    indicatorCount={spinnerBtnConfig.indicatorCount}>
                     <Text>Reset Password</Text>
                   </SpinnerButton>
                 </View>

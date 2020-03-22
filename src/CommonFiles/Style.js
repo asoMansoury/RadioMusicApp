@@ -56,6 +56,21 @@ export const initialAppStyle = EStyleSheet.create({
     backgroundColor: '#25CAC6',
   },
   spinnerViewStyle: {marginTop: 20, height: 50, width: '80%'},
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    backgroundColor: '#fff',
+  },
+});
+
+export const ProfileStyle = EStyleSheet.create({
+  loginContainer: {},
+  logo: {
+    position: 'relative',
+    width: '100%',
+    minHeight: 200,
+  },
 });
 
 export const spinnerBtnConfig = {
