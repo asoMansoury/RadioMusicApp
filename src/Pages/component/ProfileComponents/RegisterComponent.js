@@ -1,6 +1,9 @@
+/* eslint-disable no-undef */
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {Input, Text} from 'react-native-elements';
-import {StyleSheet, View, Image, ActivityIndicator} from 'react-native';
+import {View, Image, ActivityIndicator} from 'react-native';
+import {initialAppStyle, spinnerBtnConfig} from './../../../CommonFiles/Style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {isUserLogged} from '../../Redux/Actions/index';
 import {BaseApiUrl} from './../../../CommonFiles/ConstantData';
@@ -245,22 +248,14 @@ class RegisterComponent extends React.Component {
         </View>
 
         <View style={{marginTop: 10, flex: 1, alignItems: 'center'}}>
-          {/* <Button disabled={this.state.isDisabeSignUpBtn} title="SignUp" onPress={}  buttonStyle={{width:250}} type="outline"></Button> */}
-          <View style={{marginTop: 20, height: 50, width: '80%'}}>
+          <View style={[initialAppStyle.spinnerViewStyle, {width: '80%'}]}>
             <SpinnerButton
               disabled={this.state.isDisabeSignUpBtn}
               isLoading={this.state.isShowRegisterLoadinLoading}
-              spinnerType="BarIndicator"
+              spinnerType={spinnerBtnConfig.spinnerType}
               onPress={this.RegisterEvent}
-              buttonStyle={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-                borderRadius: 5,
-                height: 50,
-                backgroundColor: '#25CAC6',
-              }}
-              indicatorCount={10}>
+              buttonStyle={initialAppStyle.spinnerBtnStyle}
+              indicatorCount={spinnerBtnConfig.indicatorCount}>
               <Text>Register</Text>
             </SpinnerButton>
           </View>

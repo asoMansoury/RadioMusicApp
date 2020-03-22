@@ -191,7 +191,7 @@ class MusicProfile extends Component{
               titleStyle={styles.titleStyle}
               backgroundImage={{
                 uri:
-                  'https://roocket.ir/public/images/2018/4/10/nodejs-2.png',
+                  'http://getwallpapers.com/wallpaper/full/c/a/1/582139.jpg',
               }}
               backgroundColor="388E3C"
               backgroundImageScale={1.2}

@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable eqeqeq */
 import React, {Component} from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
 import LoginComponent from './../../component/ProfileComponents/LoginComponent';
@@ -42,10 +44,7 @@ class Profile extends Component {
       {key: 'SignUp', title: 'SignUp'},
     ],
   };
-
-  componentDidUpdate() {
-    this.dropDownAlertRef = DropDownHolder.getDropDown();
-  }
+  componentDidUpdate() {}
 
   showDropDownAlert(errorType, errorTitle, errorMessage) {
     DropDownHolder.showAlert(errorType, errorTitle, errorMessage);

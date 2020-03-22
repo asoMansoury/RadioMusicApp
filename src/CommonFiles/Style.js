@@ -47,4 +47,18 @@ export const initialAppStyle = EStyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
   },
+  spinnerBtnStyle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    borderRadius: 5,
+    height: 50,
+    backgroundColor: '#25CAC6',
+  },
+  spinnerViewStyle: {marginTop: 20, height: 50, width: '80%'},
 });
+
+export const spinnerBtnConfig = {
+  indicatorCount: 10,
+  spinnerType: 'BarIndicator',
+};
