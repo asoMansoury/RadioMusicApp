@@ -72,7 +72,7 @@ class AppIntro extends React.Component {
           />
         );
       } else {
-        return <Main />;
+        return <Main screenProps={this.props} />;
       }
     }
   }

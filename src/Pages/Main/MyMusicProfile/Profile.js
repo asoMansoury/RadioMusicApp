@@ -58,11 +58,19 @@ class Profile extends Component {
   _renderScene = ({route}) => {
     switch (route.key) {
       case SignInKey.toString():
-        return <LoginComponent showDropDownAlert={this.showDropDownAlert} />;
+        return (
+          <LoginComponent
+            screenProps={this.props}
+            showDropDownAlert={this.showDropDownAlert}
+          />
+        );
       case SignUpKey.toString():
         return (
           <KeyboardAwareScrollView>
-            <RegisterComponent showDropDownAlert={this.showDropDownAlert} />
+            <RegisterComponent
+              screenProps={this.props}
+              showDropDownAlert={this.showDropDownAlert}
+            />
           </KeyboardAwareScrollView>
         );
       default:
@@ -97,7 +105,7 @@ class Profile extends Component {
     } else {
       return (
         <View style={styles.container}>
-          <MusicProfile />
+          <MusicProfile screenProps={this.props} />
         </View>
       );
     }

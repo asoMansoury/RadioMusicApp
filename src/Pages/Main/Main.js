@@ -80,7 +80,7 @@ export default class Main extends Component {
     if (this.state.activeTab === 'MusicProfile') {
       return (
         <View style={{flex: 1}}>
-          <Profile />
+          <Profile screenProps={this.props.screenProps}/>
           <BottomNavigation
             activeTab={this.state.activeTab}
             renderTab={this.renderTab}

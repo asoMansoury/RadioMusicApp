@@ -1,11 +1,13 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/react-in-jsx-scope */
 import React from 'react';
 import {createAppContainer} from 'react-navigation';
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 import Edit from './pages/Edit';
 import Setting from './pages/Setting';
-import {View, Text,StyleSheet} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 const TabNavigator = createMaterialTopTabNavigator(
   {
@@ -13,7 +15,7 @@ const TabNavigator = createMaterialTopTabNavigator(
     Setting: Setting,
   },
   {
-    tabBarComponent: props => <CustomTabBar />,
+    tabBarComponent: props => <CustomTabBar screenProps={props} />
   },
 );
 const styles = StyleSheet.create({
@@ -22,8 +24,9 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     height: 56,
     width: '100%',
-    paddingHorizontal: 16,
-    backgroundColor: 'blue',
+    borderTopWidth: 2,
+    borderTopColor: 'black',
+    backgroundColor: '#ffffff',
   },
   tabBarItem: {
     flex: 1,
@@ -31,23 +34,45 @@ const styles = StyleSheet.create({
   },
 });
 class CustomTabBar extends React.Component {
-    constructor(props){
-        super(props);
-    }
+  constructor(props) {
+    super(props);
+  }
+
   render() {
-    // const {navigation} = this.props;
-    // const routes = navigation.state.routes;
+    const {navigation} = this.props.screenProps;
+    const routes = navigation.state.routes;
+    const widthPercent = 100 / routes.length;
+    const calc = "'" + widthPercent.toString() + "%'";
 
     return (
       <View style={styles.container}>
-          <Text>Hello</Text>
+        {routes.map((item, index) => {
+          return (
+            <View
+              style={[
+                {
+                  borderBottomWidth: 3,
+                  borderBottomColor: 'white',
+                  width: '50%',
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                },
+              ]}>
+              <TouchableWithoutFeedback
+                onPress={() => this.navigationHandler(item.routeName)}>
+                <Icon size={25} name={'settings'} />
+              </TouchableWithoutFeedback>
+            </View>
+          );
+        })}
       </View>
     );
   }
 
-//   navigationHandler = routeName => {
-//     this.props.navigation.navigate(routeName);
-//   };
+  navigationHandler = routeName => {
+    this.props.screenProps.navigation.navigate(routeName);
+  };
 }
 
 export const AppContainer = createAppContainer(TabNavigator);
