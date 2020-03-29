@@ -10,7 +10,11 @@ import {connect} from 'react-redux';
 import {saveUserInformation, isUserLogged} from '../../Redux/Actions/index';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import VerificationCodeComponent from './ForgotPasswordComponent/VerificationCodeComponent';
-import {BaseApiUrl} from './../../../CommonFiles/ConstantData';
+import {BaseApiUrl, 
+  NAV_BAR_HEIGHT,
+  STATUS_BAR_HEIGHT,
+  HEADER_HEIGHT,
+  IS_IPHONE_X} from './../../../CommonFiles/ConstantData';
 import {DropDownHolder} from './../../component/DropDownHolder';
 import DropdownAlert from 'react-native-dropdownalert';
 import SpinnerButton from 'react-native-spinner-button';
@@ -343,7 +347,7 @@ class LoginComponent extends React.Component {
   }
   render() {
     return (
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView >
         <View style={{flext: 1, flexDirection: 'column'}}>
           <View style={{height: 200}}>
             <Image

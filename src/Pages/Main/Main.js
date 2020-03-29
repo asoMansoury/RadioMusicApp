@@ -1,6 +1,5 @@
-/* eslint-disable no-undef */
 import React, {Component} from 'react';
-import {View} from 'react-native';
+import {View,StatusBar} from 'react-native';
 import BottomNavigation, {
   FullTab,
 } from 'react-native-material-bottom-navigation';
@@ -10,8 +9,15 @@ import Playlists from './Playlists/Playlists';
 import Search from './Search/Search';
 import Home from './Home/Home';
 import Profile from './MyMusicProfile/Profile';
+import {connect} from 'react-redux';
+import {
+  NAV_BAR_HEIGHT,
+  STATUS_BAR_HEIGHT,
+  HEADER_HEIGHT,
+  IS_IPHONE_X,
+} from './../../CommonFiles/ConstantData';
 
-export default class Main extends Component {
+ class Main extends Component {
   constructor(props) {
     super(props);
   }
@@ -79,8 +85,14 @@ export default class Main extends Component {
   render() {
     if (this.state.activeTab === 'MusicProfile') {
       return (
-        <View style={{flex: 1}}>
-          <Profile screenProps={this.props.screenProps}/>
+        <View
+          style={[
+            {flex: 1},
+            
+          ]}>
+            <View style={IS_IPHONE_X&&this.props.user.isUserLogged==true?{height:STATUS_BAR_HEIGHT,backgroundColor:'#388E3C'}:{}}></View>
+          <StatusBar backgroundColor='#388E3C'/>
+          <Profile screenProps={this.props.screenProps} />
           <BottomNavigation
             activeTab={this.state.activeTab}
             renderTab={this.renderTab}
@@ -92,7 +104,13 @@ export default class Main extends Component {
       );
     } else if (this.state.activeTab === 'Browse') {
       return (
-        <View style={{flex: 1}}>
+        <View
+          style={[
+            {flex: 1},
+          ]}>
+            <View style={IS_IPHONE_X?{height:STATUS_BAR_HEIGHT,backgroundColor:'#388E3C'}:{}}>
+          </View>
+          <StatusBar backgroundColor='#388E3C'/>
           <Browse />
           <BottomNavigation
             activeTab={this.state.activeTab}
@@ -104,7 +122,12 @@ export default class Main extends Component {
       );
     } else if (this.state.activeTab === 'Playlists') {
       return (
-        <View style={{flex: 1}}>
+       <View
+          style={[
+            {flex: 1},
+          ]}>
+          <View style={IS_IPHONE_X?{height:STATUS_BAR_HEIGHT,backgroundColor:'#388E3C'}:{}}></View>
+          <StatusBar backgroundColor='#388E3C'/>
           <Playlists />
           <BottomNavigation
             activeTab={this.state.activeTab}
@@ -116,7 +139,12 @@ export default class Main extends Component {
       );
     } else if (this.state.activeTab === 'Search') {
       return (
-        <View style={{flex: 1}}>
+        <View
+          style={[
+            {flex: 1},
+          ]}>
+        <View style={IS_IPHONE_X?{height:STATUS_BAR_HEIGHT,backgroundColor:'#388E3C'}:{}}></View>
+          <StatusBar backgroundColor='#388E3C'/>
           <Search />
           <BottomNavigation
             activeTab={this.state.activeTab}
@@ -128,7 +156,13 @@ export default class Main extends Component {
       );
     } else if (this.state.activeTab === 'Home') {
       return (
-        <View style={{flex: 1}}>
+       <View
+          style={[
+            {flex: 1},
+            IS_IPHONE_X ? {marginTop: STATUS_BAR_HEIGHT} : {marginTop: 0},
+          ]}>
+          <View style={IS_IPHONE_X?{height:STATUS_BAR_HEIGHT,backgroundColor:'#388E3C'}:{}}></View>
+          <StatusBar backgroundColor='#388E3C'/>
           <Home />
           <BottomNavigation
             activeTab={this.state.activeTab}
@@ -141,3 +175,31 @@ export default class Main extends Component {
     }
   }
 }
+
+const mapstatesToProps = state => {
+  return {
+    user: state.user,
+    isValidEmail: state.commonreducer.isValidEmail,
+    isMobileValidate: state.commonreducer.isValidMobile,
+    isUserLogged: state.user.isUserLogged,
+  };
+};
+
+const mapDispatchToProps = dispath => {
+  return {
+    checkIsEmailValidate: email => {
+      dispath(checkEmailValidate(email));
+    },
+    checkIsMobileValidate: mobile => {
+      dispath(checkMobileValide(mobile));
+    },
+    setUserLogging: value => {
+      dispath(isUserLogged(value));
+    },
+  };
+};
+
+export default connect(
+  mapstatesToProps,
+  mapDispatchToProps,
+)(Main);
