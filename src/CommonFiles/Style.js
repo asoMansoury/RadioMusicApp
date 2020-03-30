@@ -77,3 +77,12 @@ export const spinnerBtnConfig = {
   indicatorCount: 10,
   spinnerType: 'BarIndicator',
 };
+
+export const animatedLoadinBtnConfig = {
+  width: 200,
+  height: 45,
+  titleFontSize: 16,
+  titleColor: 'rgb(255,255,255)',
+  backgroundColor: 'rgb(29,18,121)',
+  borderRadius: 4,
+};

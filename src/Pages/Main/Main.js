@@ -1,5 +1,6 @@
+/* eslint-disable no-undef */
 import React, {Component} from 'react';
-import {View,StatusBar} from 'react-native';
+import {View, StatusBar} from 'react-native';
 import BottomNavigation, {
   FullTab,
 } from 'react-native-material-bottom-navigation';
@@ -17,7 +18,7 @@ import {
   IS_IPHONE_X,
 } from './../../CommonFiles/ConstantData';
 
- class Main extends Component {
+class Main extends Component {
   constructor(props) {
     super(props);
   }
@@ -85,13 +86,15 @@ import {
   render() {
     if (this.state.activeTab === 'MusicProfile') {
       return (
-        <View
-          style={[
-            {flex: 1},
-            
-          ]}>
-            <View style={IS_IPHONE_X&&this.props.user.isUserLogged==true?{height:STATUS_BAR_HEIGHT,backgroundColor:'#388E3C'}:{}}></View>
-          <StatusBar backgroundColor='#388E3C'/>
+        <View style={{flex: 1}}>
+          <View
+            style={
+              IS_IPHONE_X && this.props.user.isUserLogged == true
+                ? {height: STATUS_BAR_HEIGHT, backgroundColor: '#388E3C'}
+                : {}
+            }
+          />
+          <StatusBar backgroundColor="#388E3C" />
           <Profile screenProps={this.props.screenProps} />
           <BottomNavigation
             activeTab={this.state.activeTab}
@@ -104,13 +107,15 @@ import {
       );
     } else if (this.state.activeTab === 'Browse') {
       return (
-        <View
-          style={[
-            {flex: 1},
-          ]}>
-            <View style={IS_IPHONE_X?{height:STATUS_BAR_HEIGHT,backgroundColor:'#388E3C'}:{}}>
-          </View>
-          <StatusBar backgroundColor='#388E3C'/>
+        <View style={[{flex: 1}]}>
+          <View
+            style={
+              IS_IPHONE_X
+                ? {height: STATUS_BAR_HEIGHT, backgroundColor: '#388E3C'}
+                : {}
+            }
+          />
+          <StatusBar backgroundColor="#388E3C" />
           <Browse />
           <BottomNavigation
             activeTab={this.state.activeTab}
@@ -122,12 +127,15 @@ import {
       );
     } else if (this.state.activeTab === 'Playlists') {
       return (
-       <View
-          style={[
-            {flex: 1},
-          ]}>
-          <View style={IS_IPHONE_X?{height:STATUS_BAR_HEIGHT,backgroundColor:'#388E3C'}:{}}></View>
-          <StatusBar backgroundColor='#388E3C'/>
+        <View style={[{flex: 1}]}>
+          <View
+            style={
+              IS_IPHONE_X
+                ? {height: STATUS_BAR_HEIGHT, backgroundColor: '#388E3C'}
+                : {}
+            }
+          />
+          <StatusBar backgroundColor="#388E3C" />
           <Playlists />
           <BottomNavigation
             activeTab={this.state.activeTab}
@@ -139,12 +147,15 @@ import {
       );
     } else if (this.state.activeTab === 'Search') {
       return (
-        <View
-          style={[
-            {flex: 1},
-          ]}>
-        <View style={IS_IPHONE_X?{height:STATUS_BAR_HEIGHT,backgroundColor:'#388E3C'}:{}}></View>
-          <StatusBar backgroundColor='#388E3C'/>
+        <View style={[{flex: 1}]}>
+          <View
+            style={
+              IS_IPHONE_X
+                ? {height: STATUS_BAR_HEIGHT, backgroundColor: '#388E3C'}
+                : {}
+            }
+          />
+          <StatusBar backgroundColor="#388E3C" />
           <Search />
           <BottomNavigation
             activeTab={this.state.activeTab}
@@ -156,13 +167,19 @@ import {
       );
     } else if (this.state.activeTab === 'Home') {
       return (
-       <View
+        <View
           style={[
             {flex: 1},
             IS_IPHONE_X ? {marginTop: STATUS_BAR_HEIGHT} : {marginTop: 0},
           ]}>
-          <View style={IS_IPHONE_X?{height:STATUS_BAR_HEIGHT,backgroundColor:'#388E3C'}:{}}></View>
-          <StatusBar backgroundColor='#388E3C'/>
+          <View
+            style={
+              IS_IPHONE_X
+                ? {height: STATUS_BAR_HEIGHT, backgroundColor: '#388E3C'}
+                : {}
+            }
+          />
+          <StatusBar backgroundColor="#388E3C" />
           <Home />
           <BottomNavigation
             activeTab={this.state.activeTab}

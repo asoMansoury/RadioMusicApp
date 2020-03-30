@@ -8,21 +8,14 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
-import { Text ,View, StyleSheet,Image, TouchableOpacity,ScrollView} from 'react-native';
-import {createAppContainer} from 'react-navigation'
-import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
+import { Text ,View, StyleSheet,Image, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {isUserLogged} from '../../Redux/Actions/index';
-import {BaseApiUrl,mainColor,platformWidth,IS_IPHONE_X,STATUS_BAR_HEIGHT,HEADER_HEIGHT,NAV_BAR_HEIGHT} from './../../../CommonFiles/ConstantData';
-import SpinnerButton from 'react-native-spinner-button';
-import {initialAppStyle} from './../../../CommonFiles/Style';
+import {BaseApiUrl,mainColor,STATUS_BAR_HEIGHT,HEADER_HEIGHT,NAV_BAR_HEIGHT} from './../../../CommonFiles/ConstantData';
+import {animatedLoadinBtnConfig} from './../../../CommonFiles/Style';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import RNParallax from './../../CommonComponents/RNParallax/RNParallax';
-import Edit from './pages/Edit';
-import Setting from './pages/Setting';
 import {AppContainer} from './ContentProfileTabView';
-import {NavigationContainer} from '@react-navigation/native';
 import {Header,Button} from 'react-native-elements';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 
@@ -177,14 +170,14 @@ class MusicProfile extends Component{
                               <View style={{justifyContent:'center',marginLeft:10,flex:3,height:30}}>
                               <AnimateLoadingButton 
                                     ref={c=>{this.loadingButton = c}}
-                                    width={300}
-                                    height={50}
+                                    width={animatedLoadinBtnConfig.width}
+                                    height={animatedLoadinBtnConfig.height}
                                     title="Edit Profile"
-                                    titleFontSize={16}
-                                    titleColor="rgb(255,255,255)"
-                                     backgroundColor="rgb(29,18,121)"
-                                     borderRadius={4}
-                                     onPress={this._onPressHandler.bind(this)}
+                                    titleFontSize={animatedLoadinBtnConfig.titleFontSize}
+                                    titleColor={animatedLoadinBtnConfig.titleColor}
+                                    backgroundColor={animatedLoadinBtnConfig.backgroundColor}
+                                    borderRadius={animatedLoadinBtnConfig.borderRadius}
+                                    onPress={this._onPressHandler.bind(this)}
                                 />
                               </View>
                               <View style={{flex:1,height:30,marginRight:10,marginLeft:5,justifyContent:'center'}}>
@@ -200,7 +193,7 @@ class MusicProfile extends Component{
                   </View>
                   <View style={{paddingVertical:10,paddingHorizontal:10}}>
                     <Text style={{fontWeight:'bold'}}>{this.props.userInformation.userName}</Text>
-                    <Text>09389404140</Text>
+                    <Text>{this.props.userInformation.mobile}</Text>
                     <Text>www.RadioMusic.ir</Text>
                   </View>
                 </View>

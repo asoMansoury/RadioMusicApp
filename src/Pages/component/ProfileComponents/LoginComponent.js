@@ -5,20 +5,19 @@ import {Input, Button, Overlay} from 'react-native-elements';
 import {Image, View, ActivityIndicator, Text} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
-import {initialAppStyle, spinnerBtnConfig} from './../../../CommonFiles/Style';
+import {
+  initialAppStyle,
+  animatedLoadinBtnConfig,
+} from './../../../CommonFiles/Style';
 import {connect} from 'react-redux';
 import {saveUserInformation, isUserLogged} from '../../Redux/Actions/index';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import VerificationCodeComponent from './ForgotPasswordComponent/VerificationCodeComponent';
-import {BaseApiUrl, 
-  NAV_BAR_HEIGHT,
-  STATUS_BAR_HEIGHT,
-  HEADER_HEIGHT,
-  IS_IPHONE_X} from './../../../CommonFiles/ConstantData';
+import {BaseApiUrl} from './../../../CommonFiles/ConstantData';
 import {DropDownHolder} from './../../component/DropDownHolder';
 import DropdownAlert from 'react-native-dropdownalert';
-import SpinnerButton from 'react-native-spinner-button';
 import {Validation} from './../../../CommonFiles/Validation';
+import AnimateLoadingButton from 'react-native-animate-loading-button';
 
 class LoginComponent extends React.Component {
   constructor(props) {
@@ -40,11 +39,7 @@ class LoginComponent extends React.Component {
       loadingModalForgotPassword: false,
       isSendVerificationCode: true,
       isShowCheckCode: false,
-      isShowCheckCodeLoading: false,
-      isShowResetPasswordLoading: false,
-
       isShowResetPassword: false,
-      isSendCodeClicked: false,
       forgotPasswordData: {
         MobileForSendCode: '+98',
         verficationCode: '',
@@ -54,8 +49,6 @@ class LoginComponent extends React.Component {
         Email: '',
         Password: '',
       },
-
-      isShowSignInLoading: false,
     };
   }
 
@@ -68,15 +61,9 @@ class LoginComponent extends React.Component {
       email: this.state.userData.Email,
       password: this.state.userData.Password,
     };
-    this.setState({
-      ...this.state,
-      isShowSignInLoading: true,
-    });
+    this.loadingBtnSignIn.showLoading(true);
     axios.post(BaseApiUrl + '/UserApi/Login', data).then(res => {
-      this.setState({
-        ...this.state,
-        isShowSignInLoading: false,
-      });
+      this.loadingBtnSignIn.showLoading(false);
       if (res.data.isError === true) {
         this.props.showDropDownAlert('error', 'خطا', res.data.Errors.Message);
         this.props.setUserLogging(false);
@@ -105,19 +92,17 @@ class LoginComponent extends React.Component {
   };
 
   _sendVerificationCode = () => {
-    this.setState({
-      ...this.state,
-      isSendCodeClicked: true,
-    });
+    this.loadingBtnSend.showLoading(true);
     const {MobileForSendCode} = this.state.forgotPasswordData;
     if (Validation.checkMobile(MobileForSendCode)) {
       axios
         .get(
           BaseApiUrl +
-            '/MessageApi/SendVerificationCode?callNumber=' +
+            '/MessageApi/SendVerificationCode?callNumber=/' +
             this.state.forgotPasswordData.MobileForSendCode,
         )
         .then(res => {
+          this.loadingBtnSend.showLoading(false);
           if (res.data.isError == true) {
             this.dropdown.alertWithType(
               'error',
@@ -125,43 +110,33 @@ class LoginComponent extends React.Component {
               res.data.Errors.Message,
             );
           } else {
-            this.dropdown.alertWithType('error', 'Error', 'کد ارسال گردید.');
+            this.dropdown.alertWithType('success', 'Error', 'کد ارسال گردید.');
             this.setState({
               ...this.state,
               isSendVerificationCode: false,
               isShowCheckCode: true,
               isShowResetPassword: false,
-              isSendCodeClicked: false,
             });
           }
         })
         .catch(error => {
           this.dropdown.alertWithType('error', 'Error', error);
-          this.setState({
-            ...this.state,
-            isSendCodeClicked: false,
-          });
+          this.loadingBtnSend.showLoading(false);
         });
     } else {
+      this.loadingBtnSend.showLoading(false);
       this.dropdown.alertWithType(
         'error',
         'Error',
         'لطفا شماره موبایل را بدرستی وارد نمایید.',
       );
-      this.setState({
-        ...this.state,
-        isSendCodeClicked: false,
-      });
     }
   };
 
   _CheckCode = () => {
-    this.setState({
-      ...this.state,
-      isShowCheckCodeLoading: true,
-    });
     const {verficationCode, MobileForSendCode} = this.state.forgotPasswordData;
     if (verficationCode != '') {
+      this.loadingBtnChkCode.showLoading(true);
       var data = {
         callNumber: MobileForSendCode,
         confirmationCode: verficationCode,
@@ -169,14 +144,15 @@ class LoginComponent extends React.Component {
       axios
         .post(BaseApiUrl + '/MessageApi/ConfirmVerificationCode', data)
         .then(res => {
+          this.loadingBtnChkCode.showLoading(false);
           if (res.data.isError == true) {
-            DropDownHolder.showAlert('error', 'خطا', res.data.Errors.Message);
-            this.setState({
-              ...this.state,
-              isShowCheckCodeLoading: false,
-            });
+            this.dropdown.alertWithType(
+              'error',
+              'خطا',
+              res.data.Errors.Message,
+            );
           } else {
-            DropDownHolder.showAlert(
+            this.dropdown.alertWithType(
               'success',
               'اعلامیه',
               res.data.Errors.Message,
@@ -186,46 +162,46 @@ class LoginComponent extends React.Component {
               isSendVerificationCode: false,
               isShowCheckCode: false,
               isShowResetPassword: true,
-              isShowCheckCodeLoading: false,
             });
           }
         })
         .catch(error => {
-          DropDownHolder.showAlert('error', 'فرمت', error);
-          this.setState({
-            ...this.state,
-            isShowCheckCodeLoading: false,
-          });
+          this.dropdown.alertWithType('error', 'Error', error);
+          this.loadingBtnChkCode.showLoading(false);
         });
     } else {
-      DropDownHolder.showAlert('error', 'فرمت', 'data');
-      this.setState({
-        ...this.state,
-        isShowCheckCodeLoading: false,
-      });
+      this.dropdown.alertWithType('error', 'Error', 'لطفا کد را وارد نمایید.');
     }
   };
 
   _ResendCode = () => {
-    this.setState({
-      ...this.state,
-      isSendVerificationCode: true,
-      isShowCheckCode: false,
-      isShowResetPassword: false,
-    });
+    axios
+      .get(
+        BaseApiUrl +
+          '/MessageApi/SendVerificationCode?callNumber=/' +
+          this.state.forgotPasswordData.MobileForSendCode,
+      )
+      .then(res => {
+        if (res.data.isError == true) {
+          this.dropdown.alertWithType(
+            'error',
+            'Error',
+            res.data.Errors.Message,
+          );
+        } else {
+          this.dropdown.alertWithType('success', 'Error', 'کد ارسال گردید.');
+        }
+      });
   };
 
   ResetPassword = () => {
-    this.setState({
-      ...this.state,
-      isShowResetPasswordLoading: true,
-    });
     const {
       NewPassword,
       MobileForSendCode,
       verficationCode,
     } = this.state.forgotPasswordData;
     if (NewPassword != '') {
+      this.loadingBtnReset.showLoading(true);
       var data = {
         callNumber: MobileForSendCode,
         confirmationCode: verficationCode,
@@ -234,12 +210,13 @@ class LoginComponent extends React.Component {
       axios
         .post(BaseApiUrl + '/MessageApi/ResetPassword', data)
         .then(res => {
+          this.loadingBtnReset.showLoading(false);
           if (res.data.isError == true) {
-            DropDownHolder.showAlert('error', 'خطا', res.data.Errors.Message);
-            this.setState({
-              ...this.state,
-              isShowResetPasswordLoading: false,
-            });
+            this.dropdown.alertWithType(
+              'error',
+              'خطا',
+              res.data.Errors.Message,
+            );
           } else {
             DropDownHolder.showAlert(
               'success',
@@ -253,19 +230,12 @@ class LoginComponent extends React.Component {
           }
         })
         .catch(error => {
-          DropDownHolder.showAlert('error', 'فرمت', error);
-          this.setState({
-            ...this.state,
-            isShowResetPasswordLoading: false,
-          });
+          this.dropdown.alertWithType('error', 'خطا', error);
+          this.loadingBtnReset.showLoading(false);
         });
     } else {
-      DropDownHolder.showAlert('error', 'فرمت', 'data');
-      this.setState({
-        ...this.state,
-        isShowCheckCodeLoading: false,
-        isShowResetPasswordLoading: false,
-      });
+      this.dropdown.alertWithType('error', 'خطا', 'لطفا پسورد را وارد نمایید.');
+      this.loadingBtnReset.showLoading(false);
     }
   };
 
@@ -347,7 +317,7 @@ class LoginComponent extends React.Component {
   }
   render() {
     return (
-      <KeyboardAwareScrollView >
+      <KeyboardAwareScrollView>
         <View style={{flext: 1, flexDirection: 'column'}}>
           <View style={{height: 200}}>
             <Image
@@ -372,15 +342,19 @@ class LoginComponent extends React.Component {
           </View>
           <View style={{marginTop: 10, flex: 1, alignItems: 'center'}}>
             <View style={[initialAppStyle.spinnerViewStyle, {width: '80%'}]}>
-              <SpinnerButton
-                disabled={this.state.isDisabeBtnLogin}
-                isLoading={this.state.isShowSignInLoading}
-                spinnerType={spinnerBtnConfig.spinnerType}
+              <AnimateLoadingButton
+                ref={c => {
+                  this.loadingBtnSignIn = c;
+                }}
+                width={animatedLoadinBtnConfig.width}
+                height={animatedLoadinBtnConfig.height}
+                title="Sign In"
+                titleFontSize={animatedLoadinBtnConfig.titleFontSize}
+                titleColor={animatedLoadinBtnConfig.titleColor}
+                backgroundColor={animatedLoadinBtnConfig.backgroundColor}
+                borderRadius={animatedLoadinBtnConfig.borderRadius}
                 onPress={this._LoginEvent}
-                buttonStyle={[initialAppStyle.spinnerBtnStyle, {height: 50}]}
-                indicatorCount={spinnerBtnConfig.indicatorCount}>
-                <Text>Sign In</Text>
-              </SpinnerButton>
+              />
             </View>
             <Button
               title="Forgot Password"
@@ -444,17 +418,19 @@ class LoginComponent extends React.Component {
                 />
                 <View
                   style={[initialAppStyle.spinnerViewStyle, {width: '80%'}]}>
-                  <SpinnerButton
-                    isLoading={this.state.isSendCodeClicked}
-                    spinnerType={spinnerBtnConfig.spinnerType}
+                  <AnimateLoadingButton
+                    ref={c => {
+                      this.loadingBtnSend = c;
+                    }}
+                    width={animatedLoadinBtnConfig.width}
+                    height={animatedLoadinBtnConfig.height}
+                    title="Send"
+                    titleFontSize={animatedLoadinBtnConfig.titleFontSize}
+                    titleColor={animatedLoadinBtnConfig.titleColor}
+                    backgroundColor={animatedLoadinBtnConfig.backgroundColor}
+                    borderRadius={animatedLoadinBtnConfig.borderRadius}
                     onPress={this._sendVerificationCode}
-                    buttonStyle={[
-                      initialAppStyle.spinnerBtnStyle,
-                      {height: 50},
-                    ]}
-                    indicatorCount={spinnerBtnConfig.indicatorCount}>
-                    <Text>Send</Text>
-                  </SpinnerButton>
+                  />
                 </View>
               </VerificationCodeComponent>
 
@@ -467,17 +443,19 @@ class LoginComponent extends React.Component {
                 />
                 <View
                   style={[initialAppStyle.spinnerViewStyle, {width: '80%'}]}>
-                  <SpinnerButton
-                    isLoading={this.state.isShowCheckCodeLoading}
-                    spinnerType={spinnerBtnConfig.spinnerType}
+                  <AnimateLoadingButton
+                    ref={c => {
+                      this.loadingBtnChkCode = c;
+                    }}
+                    width={animatedLoadinBtnConfig.width}
+                    height={animatedLoadinBtnConfig.height}
+                    title="Check Code"
+                    titleFontSize={animatedLoadinBtnConfig.titleFontSize}
+                    titleColor={animatedLoadinBtnConfig.titleColor}
+                    backgroundColor={animatedLoadinBtnConfig.backgroundColor}
+                    borderRadius={animatedLoadinBtnConfig.borderRadius}
                     onPress={this._CheckCode}
-                    buttonStyle={[
-                      initialAppStyle.spinnerBtnStyle,
-                      {height: 50},
-                    ]}
-                    indicatorCount={spinnerBtnConfig.indicatorCount}>
-                    <Text>Check Code</Text>
-                  </SpinnerButton>
+                  />
                 </View>
                 <Button
                   title="Resend"
@@ -499,17 +477,19 @@ class LoginComponent extends React.Component {
                 />
                 <View
                   style={[initialAppStyle.spinnerViewStyle, {width: '80%'}]}>
-                  <SpinnerButton
-                    isLoading={this.state.isShowResetPasswordLoading}
-                    spinnerType={spinnerBtnConfig.spinnerType}
+                  <AnimateLoadingButton
+                    ref={c => {
+                      this.loadingBtnReset = c;
+                    }}
+                    width={animatedLoadinBtnConfig.width}
+                    height={animatedLoadinBtnConfig.height}
+                    title="Reset Password"
+                    titleFontSize={animatedLoadinBtnConfig.titleFontSize}
+                    titleColor={animatedLoadinBtnConfig.titleColor}
+                    backgroundColor={animatedLoadinBtnConfig.backgroundColor}
+                    borderRadius={animatedLoadinBtnConfig.borderRadius}
                     onPress={this.ResetPassword}
-                    buttonStyle={[
-                      initialAppStyle.spinnerBtnStyle,
-                      {height: 50},
-                    ]}
-                    indicatorCount={spinnerBtnConfig.indicatorCount}>
-                    <Text>Reset Password</Text>
-                  </SpinnerButton>
+                  />
                 </View>
               </VerificationCodeComponent>
             </View>

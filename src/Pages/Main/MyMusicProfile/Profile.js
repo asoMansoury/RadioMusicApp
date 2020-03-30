@@ -1,5 +1,6 @@
+/* eslint-disable no-undef */
 import React, {Component} from 'react';
-import {View, StyleSheet, Dimensions,StatusBar} from 'react-native';
+import {View, StyleSheet, Dimensions, StatusBar} from 'react-native';
 import {initialAppStyle} from './../../../CommonFiles/Style';
 import {platformWidth} from './../../../CommonFiles/ConstantData';
 import LoginComponent from './../../component/ProfileComponents/LoginComponent';
@@ -78,7 +79,7 @@ class Profile extends Component {
     <TabBar {...props} style={{backgroundColor: '#388E3C'}} />
   );
   render() {
-    if (this.props.user.isUserLogged == true) {
+    if (this.props.user.isUserLogged == false) {
       return (
         <View
           style={styles.container}
@@ -91,7 +92,6 @@ class Profile extends Component {
             onIndexChange={this._handleIndexChange}
             initialLayout={initialLayout}
           />
-          
           <DropdownAlert
             ref={ref => DropDownHolder.setDropDown(ref)}
             closeInterval={2000}
@@ -101,7 +101,6 @@ class Profile extends Component {
       );
     } else {
       return (
-          
         <View style={styles.container}>
           <MusicProfile screenProps={this.props} />
         </View>
