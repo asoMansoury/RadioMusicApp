@@ -24,6 +24,8 @@ import Setting from './pages/Setting';
 import {AppContainer} from './ContentProfileTabView';
 import {NavigationContainer} from '@react-navigation/native';
 import {Header,Button} from 'react-native-elements';
+import AnimateLoadingButton from 'react-native-animate-loading-button';
+
 
 const styles = StyleSheet.create({
   navContainer: {
@@ -72,39 +74,6 @@ class MusicProfile extends Component{
       if(this.state.activeIndex===0){
         return(
           <View style={{flexDirection:'column',flexWrap:'wrap'}}>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            <Text>Page 0</Text>
-            
             <Text>Page 0</Text>
           </View>
         )
@@ -158,6 +127,16 @@ class MusicProfile extends Component{
         <Text style={{color:'white'}}>{this.props.userInformation.userName}</Text>
       </View>)
     }
+             
+      _onPressHandler() {
+        this.loadingButton.showLoading(true);
+
+        // mock
+        setTimeout(() => {
+          this.loadingButton.showLoading(false);
+        }, 2000);
+      }
+
     render(){
         return(
             // <ParallaxScrollView  >
@@ -196,9 +175,16 @@ class MusicProfile extends Component{
                         </View>
                         <View style={{flexDirection:'row',justifyContent:'center',paddingTop:10}}>
                               <View style={{justifyContent:'center',marginLeft:10,flex:3,height:30}}>
-                              <Button
-                                  title="Edit Profile"
-                                  type="solid"
+                              <AnimateLoadingButton 
+                                    ref={c=>{this.loadingButton = c}}
+                                    width={300}
+                                    height={50}
+                                    title="Edit Profile"
+                                    titleFontSize={16}
+                                    titleColor="rgb(255,255,255)"
+                                     backgroundColor="rgb(29,18,121)"
+                                     borderRadius={4}
+                                     onPress={this._onPressHandler.bind(this)}
                                 />
                               </View>
                               <View style={{flex:1,height:30,marginRight:10,marginLeft:5,justifyContent:'center'}}>
