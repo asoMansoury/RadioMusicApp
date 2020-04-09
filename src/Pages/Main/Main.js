@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-undef */
 import React, {Component} from 'react';
 import {View, StatusBar} from 'react-native';
@@ -11,12 +12,7 @@ import Search from './Search/Search';
 import Home from './Home/Home';
 import Profile from './MyMusicProfile/Profile';
 import {connect} from 'react-redux';
-import {
-  NAV_BAR_HEIGHT,
-  STATUS_BAR_HEIGHT,
-  HEADER_HEIGHT,
-  IS_IPHONE_X,
-} from './../../CommonFiles/ConstantData';
+import {STATUS_BAR_HEIGHT, IS_IPHONE_X} from './../../CommonFiles/ConstantData';
 
 class Main extends Component {
   constructor(props) {
@@ -89,7 +85,7 @@ class Main extends Component {
         <View style={{flex: 1}}>
           <View
             style={
-              IS_IPHONE_X && this.props.user.isUserLogged == true
+              IS_IPHONE_X && this.props.user.isUserLogged === true
                 ? {height: STATUS_BAR_HEIGHT, backgroundColor: '#388E3C'}
                 : {}
             }

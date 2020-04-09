@@ -1,13 +1,12 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import {View, Text, Button} from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import AppIntroPage from './src/Pages/AppIntro/AppIntroSlider';
 import Main from './src/Pages/Main/Main';
 import {Provider} from 'react-redux';
-import {store, persistor} from './src/Pages/Redux/Store/index';
+import {store} from './src/Pages/Redux/Store/index';
 
 const MainNavigator = createStackNavigator(
   {

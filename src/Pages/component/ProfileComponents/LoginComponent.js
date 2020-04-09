@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable eqeqeq */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
@@ -18,6 +19,7 @@ import {DropDownHolder} from './../../component/DropDownHolder';
 import DropdownAlert from 'react-native-dropdownalert';
 import {Validation} from './../../../CommonFiles/Validation';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
+import commonUtility from './../../../CommonFiles/commonUtility';
 
 class LoginComponent extends React.Component {
   constructor(props) {
@@ -81,6 +83,9 @@ class LoginComponent extends React.Component {
         };
         this.props.saveUserInformation(userInformation);
       }
+    }).catch(error => {
+      this.dropdown.alertWithType('error', 'Error', error);
+      this.loadingBtnChkCode.showLoading(false);
     });
   };
 
@@ -330,25 +335,28 @@ class LoginComponent extends React.Component {
           </View>
           <View>
             <Input
+              id="emailLoginTxt"
               leftIcon={this.renderIcon('ios-mail')}
-              placeholder="Email"
+              placeholder={commonUtility.getElementTitle('emailLoginTxt')}
               onChangeText={this.handleChangeEmail}
             />
             <Input
+              id="passwordLoginTxt"
               leftIcon={this.renderIcon('ios-key')}
-              placeholder="Password"
+              placeholder={commonUtility.getElementTitle('passwordLoginTxt')}
               onChangeText={this.handleChangePassword.bind(this)}
             />
           </View>
-          <View style={{marginTop: 10, flex: 1, alignItems: 'center'}}>
-            <View style={[initialAppStyle.spinnerViewStyle, {width: '80%'}]}>
+          <View style={{ flex: 1, alignItems: 'center'}}>
+            <View style={[initialAppStyle.spinnerViewStyle, {width: '80%',marginTop:animatedLoadinBtnConfig.marginTop}]}>
               <AnimateLoadingButton
                 ref={c => {
                   this.loadingBtnSignIn = c;
                 }}
+                id="SignInBtn"
                 width={animatedLoadinBtnConfig.width}
                 height={animatedLoadinBtnConfig.height}
-                title="Sign In"
+                title={commonUtility.getElementTitle('SignInBtn')}
                 titleFontSize={animatedLoadinBtnConfig.titleFontSize}
                 titleColor={animatedLoadinBtnConfig.titleColor}
                 backgroundColor={animatedLoadinBtnConfig.backgroundColor}
@@ -357,7 +365,8 @@ class LoginComponent extends React.Component {
               />
             </View>
             <Button
-              title="Forgot Password"
+              id="ForgotPassword"
+              title={commonUtility.getElementTitle('ForgotPassword')}
               type="clear"
               onPress={this._forgotPasswordEvent}
               buttonStyle={{width: 400}}
@@ -412,19 +421,21 @@ class LoginComponent extends React.Component {
                 hide={this.state.isSendVerificationCode}>
                 <Input
                   leftIcon={this.renderIcon('ios-call')}
-                  placeholder="Mobile"
+                  id="MobileVerifyLogin"
+                  placeholder={commonUtility.getElementPlaceHolder('MobileVerifyLogin')}
                   onChangeText={this.handleChangeForgotMobile}
                   value={this.state.forgotPasswordData.MobileForSendCode}
                 />
                 <View
-                  style={[initialAppStyle.spinnerViewStyle, {width: '80%'}]}>
+                  style={[initialAppStyle.spinnerViewStyle, {width: '80%',marginTop:animatedLoadinBtnConfig.marginTop}]}>
                   <AnimateLoadingButton
                     ref={c => {
                       this.loadingBtnSend = c;
                     }}
                     width={animatedLoadinBtnConfig.width}
                     height={animatedLoadinBtnConfig.height}
-                    title="Send"
+                    title={commonUtility.getElementTitle('SendVerifyLogin')}
+                    id="SendVerifyLogin"
                     titleFontSize={animatedLoadinBtnConfig.titleFontSize}
                     titleColor={animatedLoadinBtnConfig.titleColor}
                     backgroundColor={animatedLoadinBtnConfig.backgroundColor}
@@ -438,18 +449,20 @@ class LoginComponent extends React.Component {
                 <Text>Timer</Text>
                 <Input
                   leftIcon={this.renderIcon('ios-call')}
-                  placeholder="Verification Code"
+                  id="VerificationCodeLogin"
+                  placeholder={commonUtility.getElementPlaceHolder('VerificationCodeLogin')}
                   onChangeText={this.handleChangeForgotVerficationCode}
                 />
                 <View
-                  style={[initialAppStyle.spinnerViewStyle, {width: '80%'}]}>
+                  style={[initialAppStyle.spinnerViewStyle, {width: '80%',marginTop:animatedLoadinBtnConfig.marginTop}]}>
                   <AnimateLoadingButton
                     ref={c => {
                       this.loadingBtnChkCode = c;
                     }}
                     width={animatedLoadinBtnConfig.width}
                     height={animatedLoadinBtnConfig.height}
-                    title="Check Code"
+                    id="CheckCodeLogin"
+                    title={commonUtility.getElementTitle('CheckCodeLogin')}
                     titleFontSize={animatedLoadinBtnConfig.titleFontSize}
                     titleColor={animatedLoadinBtnConfig.titleColor}
                     backgroundColor={animatedLoadinBtnConfig.backgroundColor}
@@ -458,7 +471,8 @@ class LoginComponent extends React.Component {
                   />
                 </View>
                 <Button
-                  title="Resend"
+                  id="ResendLogin"
+                  title={commonUtility.getElementTitle('ResendLogin')}
                   onPress={this._ResendCode}
                   type="clear"
                   buttonStyle={{
@@ -472,18 +486,20 @@ class LoginComponent extends React.Component {
               <VerificationCodeComponent hide={this.state.isShowResetPassword}>
                 <Input
                   leftIcon={this.renderIcon('ios-call')}
-                  placeholder="New Password"
+                  id="NewPasswordLogin"
+                  placeholder={commonUtility.getElementPlaceHolder('NewPasswordLogin')}
                   onChangeText={this.handleChangeForgotResetPassword}
                 />
                 <View
-                  style={[initialAppStyle.spinnerViewStyle, {width: '80%'}]}>
+                  style={[initialAppStyle.spinnerViewStyle, {width: '80%',marginTop:animatedLoadinBtnConfig.marginTop}]}>
                   <AnimateLoadingButton
                     ref={c => {
                       this.loadingBtnReset = c;
                     }}
+                    id="ResetPasswordBtn"
                     width={animatedLoadinBtnConfig.width}
                     height={animatedLoadinBtnConfig.height}
-                    title="Reset Password"
+                    title={commonUtility.getElementTitle('ResetPasswordBtn')}
                     titleFontSize={animatedLoadinBtnConfig.titleFontSize}
                     titleColor={animatedLoadinBtnConfig.titleColor}
                     backgroundColor={animatedLoadinBtnConfig.backgroundColor}
@@ -495,7 +511,7 @@ class LoginComponent extends React.Component {
             </View>
             <DropdownAlert
               ref={ref => (this.dropdown = ref)}
-              closeInterval={1500}
+              closeInterval={2500}
               zIndex={2000}
             />
           </Overlay>
@@ -520,6 +536,7 @@ const mapDispatchToProps = dispath => {
     saveUserInformation: value => {
       dispath(saveUserInformation(value));
     },
+
   };
 };
 

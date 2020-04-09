@@ -143,6 +143,8 @@ android {
         }
     }
     signingConfigs {
+		release {
+        }
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'

@@ -11,9 +11,8 @@ import React, {Component} from 'react';
 import { Text ,View, StyleSheet,Image, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {isUserLogged} from '../../Redux/Actions/index';
-import {BaseApiUrl,mainColor,STATUS_BAR_HEIGHT,HEADER_HEIGHT,NAV_BAR_HEIGHT} from './../../../CommonFiles/ConstantData';
+import {mainColor,STATUS_BAR_HEIGHT,HEADER_HEIGHT,NAV_BAR_HEIGHT} from './../../../CommonFiles/ConstantData';
 import {animatedLoadinBtnConfig} from './../../../CommonFiles/Style';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import {AppContainer} from './ContentProfileTabView';
 import {Header,Button} from 'react-native-elements';
@@ -112,7 +111,7 @@ class MusicProfile extends Component{
       this.setState({
         ...this.state,
         activeIndex:index
-      })
+        })
       }
 
     _renderCenterComponentHeader(){
@@ -120,7 +119,6 @@ class MusicProfile extends Component{
         <Text style={{color:'white'}}>{this.props.userInformation.userName}</Text>
       </View>)
     }
-             
       _onPressHandler() {
         this.loadingButton.showLoading(true);
 
@@ -168,7 +166,7 @@ class MusicProfile extends Component{
                         </View>
                         <View style={{flexDirection:'row',justifyContent:'center',paddingTop:10}}>
                               <View style={{justifyContent:'center',marginLeft:10,flex:3,height:30}}>
-                              <AnimateLoadingButton 
+                              <AnimateLoadingButton
                                     ref={c=>{this.loadingButton = c}}
                                     width={animatedLoadinBtnConfig.width}
                                     height={animatedLoadinBtnConfig.height}
@@ -192,49 +190,22 @@ class MusicProfile extends Component{
 
                   </View>
                   <View style={{paddingVertical:10,paddingHorizontal:10}}>
-                    <Text style={{fontWeight:'bold'}}>{this.props.userInformation.userName}</Text>
-                    <Text>{this.props.userInformation.mobile}</Text>
-                    <Text>www.RadioMusic.ir</Text>
+                      <Text style={{fontWeight:'bold'}}>{this.props.userInformation.userName}</Text>
+                      <Text>{this.props.userInformation.mobile}</Text>
+                      <Text>www.RadioMusic.ir</Text>
                   </View>
                 </View>
                 <View>
                   <View style={{flexDirection:'row',justifyContent:'space-around',borderTopWidth:1,borderTopColor:'#ae5e5'}} >
-                  <Button type="clear" onPress={()=>this.segmentClick(0)}  icon={<Icon style={[this.state.activeIndex===0?{color:'blue'}:{color:'grey'}]} name="menu" size={40}/>} />
-                  <Button type="clear" onPress={()=>this.segmentClick(1)}   icon={<Icon style={[this.state.activeIndex===1?{color:'blue'}:{color:'grey'}]} name="message" size={40}/>} />
-                  <Button type="clear" onPress={()=>this.segmentClick(2)}   icon={<Icon style={[this.state.activeIndex===2?{color:'blue'}:{color:'grey'}]} name="watch-later" size={40}/>} />
-                  <Button type="clear" onPress={()=>this.segmentClick(3)}   icon={<Icon style={[this.state.activeIndex===3?{color:'blue'}:{color:'grey'}]} name="photo" size={40}/>} />
-
+                    <Button type="clear" onPress={()=>this.segmentClick(0)}  icon={<Icon style={[this.state.activeIndex===0?{color:'blue'}:{color:'grey'}]} name="menu" size={40}/>} />
+                    <Button type="clear" onPress={()=>this.segmentClick(1)}   icon={<Icon style={[this.state.activeIndex===1?{color:'blue'}:{color:'grey'}]} name="message" size={40}/>} />
+                    <Button type="clear" onPress={()=>this.segmentClick(2)}   icon={<Icon style={[this.state.activeIndex===2?{color:'blue'}:{color:'grey'}]} name="watch-later" size={40}/>} />
+                    <Button type="clear" onPress={()=>this.segmentClick(3)}   icon={<Icon style={[this.state.activeIndex===3?{color:'blue'}:{color:'grey'}]} name="photo" size={40}/>} />
                   </View>
                 </View>
                 <View>
                   {this.renderSection()}
                 </View>
-            {/* <RNParallax
-              useNativeDriver={true}
-              alwaysShowTitle={1}
-              isBackgroundScalable={true}
-              headerMinHeight={HEADER_HEIGHT}
-              headerMaxHeight={250}
-              extraScrollHeight={20}
-              navbarColor={'#388E3C'}
-              title={this.props.userInformation.userName}
-              titleStyle={styles.titleStyle}
-              backgroundImage={{
-                uri:
-                  'http://getwallpapers.com/wallpaper/full/c/a/1/582139.jpg',
-              }}
-              backgroundColor="388E3C"
-              backgroundImageScale={1.2}
-              renderNavBar={this.renderNavBar}
-              renderContent={this.renderContent}
-              containerStyle={{ flex: 1 }}
-              contentContainerStyle={{ flexGrow: 1 }}
-              innerContainerStyle={{ flex: 1 }}
-              scrollViewProps={{
-                onScrollBeginDrag: () => console.log('onScrollBeginDrag'),
-                onScrollEndDrag: () => console.log('onScrollEndDrag'),
-              }}
-            /> */}
           </View>
         )
     }

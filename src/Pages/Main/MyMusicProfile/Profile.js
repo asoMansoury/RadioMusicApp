@@ -1,8 +1,9 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 import React, {Component} from 'react';
-import {View, StyleSheet, Dimensions, StatusBar} from 'react-native';
-import {initialAppStyle} from './../../../CommonFiles/Style';
-import {platformWidth} from './../../../CommonFiles/ConstantData';
+import {View, StyleSheet} from 'react-native';
+import {platformWidth,UIName,TLID} from './../../../CommonFiles/ConstantData';
 import LoginComponent from './../../component/ProfileComponents/LoginComponent';
 import RegisterComponent from './../../component/ProfileComponents/RegisterComponent';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -11,8 +12,13 @@ import MusicProfile from './MusicProfile';
 import {connect} from 'react-redux';
 import DropdownAlert from 'react-native-dropdownalert';
 import {DropDownHolder} from './../../component/DropDownHolder';
+import commonUtility from './../../../CommonFiles/commonUtility';
+import axios from 'axios';
+import {isUserLogged, setPageLanguage,filterElementsLanguage} from '../../Redux/Actions/index';
+
 import {
   mainColor,
+  BaseApiUrl,
   SignInKey,
   SignUpKey,
 } from './../../../CommonFiles/ConstantData';
@@ -35,17 +41,41 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     this.showDropDownAlert = this.showDropDownAlert.bind(this);
+    this._loadText = this._loadText.bind(this);
   }
   state = {
     isShowDropDown: false,
     index: 0,
     routes: [
-      {key: 'SignIn', title: 'SignIn'},
-      {key: 'SignUp', title: 'SignUp'},
+      {key: 'SignIn', title: commonUtility.getElementTitle('SignIn')},
+      {key: 'SignUp', title: commonUtility.getElementTitle('SignUp')},
     ],
   };
   componentDidUpdate() {}
+  componentWillMount() {
+    this._loadText(TLID.English);
+  }
 
+  _loadText = TlID => {
+    var data = {
+      TLanguageID: TlID,
+      Key: UIName.Profile,
+      PlatformType: 3,
+    };
+    axios.post(BaseApiUrl + '/FrontEndApi/inqueryPage', data).then(res => {
+      if (res.data.isError === true) {
+      } else {
+        this.props.setPageLanguage(res.data.FronEndPages);
+        this.setState({
+          ...this.state,
+          routes: [
+            {key: 'SignIn', title: commonUtility.getElementTitle('SignIn')},
+            {key: 'SignUp', title: commonUtility.getElementTitle('SignUp')},
+          ],
+        });
+      }
+    });
+  };
   showDropDownAlert(errorType, errorTitle, errorMessage) {
     DropDownHolder.showAlert(errorType, errorTitle, errorMessage);
   }
@@ -58,7 +88,6 @@ class Profile extends Component {
         return (
           <LoginComponent
             screenProps={this.props}
-            showDropDownAlert={this.showDropDownAlert}
           />
         );
       case SignUpKey.toString():
@@ -79,7 +108,7 @@ class Profile extends Component {
     <TabBar {...props} style={{backgroundColor: '#388E3C'}} />
   );
   render() {
-    if (this.props.user.isUserLogged == false) {
+    if (this.props.user.isUserLogged === false) {
       return (
         <View
           style={styles.container}
@@ -115,6 +144,7 @@ const mapstatesToProps = state => {
     isValidEmail: state.commonreducer.isValidEmail,
     isMobileValidate: state.commonreducer.isValidMobile,
     isUserLogged: state.user.isUserLogged,
+    configApp: state.configApp,
   };
 };
 
@@ -128,6 +158,12 @@ const mapDispatchToProps = dispath => {
     },
     setUserLogging: value => {
       dispath(isUserLogged(value));
+    },
+    setPageLanguage: value => {
+      dispath(setPageLanguage(value));
+    },
+    filterElementsLanguage:value=>{
+      dispath(filterElementsLanguage(value));
     },
   };
 };

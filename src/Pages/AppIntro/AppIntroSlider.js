@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /* eslint-disable eqeqeq */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
@@ -7,7 +6,7 @@ import AppIntroSlider from 'react-native-app-intro-slider';
 import {initialAppStyle} from '../../CommonFiles/Style.js';
 import Main from './../Main/Main';
 import {connect} from 'react-redux';
-
+import {setUserRunning} from './../Redux/Actions/index';
 const slides = [
   {
     key: 'somethun',
@@ -35,7 +34,6 @@ const slides = [
 class AppIntro extends React.Component {
   constructor(props) {
     super(props);
-
     if (this.props.user.isFirstTimeRunning == true) {
       this.props.navigation.replace('MainPage');
     }
@@ -51,7 +49,7 @@ class AppIntro extends React.Component {
   };
 
   _onDone = () => {
-    this.props.setUserIsFirstTimeRunning(false);
+    this.props.setUserIsFirstTimeRunning(true);
     this.props.navigation.replace('MainPage');
   };
 
@@ -63,7 +61,7 @@ class AppIntro extends React.Component {
         </View>
       );
     } else {
-      if (this.props.user.isFirstTimeRunning) {
+      if (this.props.user.isFirstTimeRunning === false) {
         return (
           <AppIntroSlider
             renderItem={this._renderItem}

@@ -79,7 +79,8 @@ export const spinnerBtnConfig = {
 };
 
 export const animatedLoadinBtnConfig = {
-  width: 200,
+  width: 350,
+  marginTop: 15,
   height: 45,
   titleFontSize: 16,
   titleColor: 'rgb(255,255,255)',

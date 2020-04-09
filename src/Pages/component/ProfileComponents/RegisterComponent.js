@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-undef */
@@ -13,12 +14,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {isUserLogged} from '../../Redux/Actions/index';
 import {BaseApiUrl} from './../../../CommonFiles/ConstantData';
 import axios from 'axios';
-import {DropDownHolder} from './../../component/DropDownHolder';
 import DropdownAlert from 'react-native-dropdownalert';
 import VerificationCodeComponent from './ForgotPasswordComponent/VerificationCodeComponent';
 import {connect} from 'react-redux';
 import {Validation} from './../../../CommonFiles/Validation';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
+import commonUtility from './../../../CommonFiles/commonUtility';
 
 class RegisterComponent extends React.Component {
   constructor(props) {
@@ -396,34 +397,41 @@ class RegisterComponent extends React.Component {
         </View>
         <View>
           <Input
+            id="MobileReg"
             leftIcon={this.renderIcon('ios-call')}
-            placeholder="Mobile"
+            placeholder={commonUtility.getElementPlaceHolder('MobileReg')}
             value={this.state.userData.Mobile}
             onBlur={this.checkMobileValid}
             onChangeText={this.handleMobileTxt}
           />
           <Input
+            id="UserNameReg"
             leftIcon={this.renderIcon('ios-mail')}
-            placeholder="UserName"
+            placeholder={commonUtility.getElementPlaceHolder('UserNameReg')}
             value={this.state.userData.UserName}
             onBlur={this.CheckUserName}
             onChangeText={this.handleUserName}
           />
           <Input
+            id="PasswordReg"
             leftIcon={this.renderIcon('ios-key')}
-            placeholder="Password"
+            placeholder={commonUtility.getElementPlaceHolder('PasswordReg')}
             value={this.state.userData.Password}
             onChangeText={this.handlePasswordTxt}
           />
           <Input
+            id="ConfirmPasswordReg"
             leftIcon={this.renderIcon('ios-key')}
-            placeholder="Confirm Password"
+            placeholder={commonUtility.getElementPlaceHolder(
+              'ConfirmPasswordReg',
+            )}
             value={this.state.userData.ConfirmPassword}
             onChangeText={this.handleConfirmPassTXT}
           />
           <Input
+            id="EmailReg"
             leftIcon={this.renderIcon('ios-mail')}
-            placeholder="Email"
+            placeholder={commonUtility.getElementPlaceHolder('EmailReg')}
             onBlur={this.checkEmailValid}
             value={this.state.userData.Email}
             onChangeText={this.handleEmailTxt}
@@ -464,7 +472,8 @@ class RegisterComponent extends React.Component {
               <Text>Timer</Text>
               <Input
                 leftIcon={this.renderIcon('ios-call')}
-                placeholder="Confirmation Code"
+                id="ConfirmationCodeReg"
+                placeholder={commonUtility.getElementPlaceHolder('ConfirmationCodeReg')}
                 onChangeText={this.handleChangeConfirmation}
               />
               <View
@@ -476,9 +485,10 @@ class RegisterComponent extends React.Component {
                   ref={c => {
                     this.loadingBtnChkCode = c;
                   }}
+                  id="ConfirmRegBtn"
                   width={animatedLoadinBtnConfig.width}
                   height={animatedLoadinBtnConfig.height}
-                  title="Confirm"
+                  title={commonUtility.getElementTitle('ConfirmRegBtn')}
                   titleFontSize={animatedLoadinBtnConfig.titleFontSize}
                   titleColor={animatedLoadinBtnConfig.titleColor}
                   backgroundColor={animatedLoadinBtnConfig.backgroundColor}
@@ -487,7 +497,8 @@ class RegisterComponent extends React.Component {
                 />
               </View>
               <Button
-                title="Resend"
+                id="ResendBtnReg"
+                title={commonUtility.getElementPlaceHolder('ResendBtnReg')}
                 onPress={this._ResendCode}
                 type="clear"
                 buttonStyle={{
@@ -504,15 +515,16 @@ class RegisterComponent extends React.Component {
             />
           </View>
         </Overlay>
-        <View style={{marginTop: 10, flex: 1, alignItems: 'center'}}>
-          <View style={[initialAppStyle.spinnerViewStyle, {width: '80%'}]}>
+        <View style={{ flex: 1, alignItems: 'center'}}>
+          <View style={[initialAppStyle.spinnerViewStyle, {width: '80%',marginTop:animatedLoadinBtnConfig.marginTop}]}>
             <AnimateLoadingButton
               ref={c => {
                 this.loadingBtnSignUP = c;
               }}
+              id="SignUpBtnReg"
               width={animatedLoadinBtnConfig.width}
               height={animatedLoadinBtnConfig.height}
-              title="Sign Up"
+              title={commonUtility.getElementPlaceHolder('SignUpBtnReg')}
               titleFontSize={animatedLoadinBtnConfig.titleFontSize}
               titleColor={animatedLoadinBtnConfig.titleColor}
               backgroundColor={animatedLoadinBtnConfig.backgroundColor}
