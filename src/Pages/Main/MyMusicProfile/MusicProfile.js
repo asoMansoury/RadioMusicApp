@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable eol-last */
 /* eslint-disable space-infix-ops */
@@ -10,6 +11,7 @@
 import React, {Component} from 'react';
 import { Text ,View, StyleSheet,Image, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import {isUserLogged} from '../../Redux/Actions/index';
 import {mainColor,STATUS_BAR_HEIGHT,HEADER_HEIGHT,NAV_BAR_HEIGHT} from './../../../CommonFiles/ConstantData';
 import {animatedLoadinBtnConfig} from './../../../CommonFiles/Style';
@@ -52,6 +54,7 @@ class MusicProfile extends Component{
         this.segmentClick = this.segmentClick.bind(this);
         this._renderCenterComponentHeader = this._renderCenterComponentHeader.bind(this);
         this.renderSection = this.renderSection.bind(this);
+        this._renderLeftComponent = this._renderLeftComponent.bind(this);
         // console.log('Props :-----------------',this.props.screenProps.screenProps.navigation.replace("AppIntro"));
         this.state={
           activeIndex:0
@@ -93,19 +96,7 @@ class MusicProfile extends Component{
       }
     }
 
-    renderNavBar = () => (
-        <View style={styles.navContainer}>
-          <View style={styles.statusBar} />
-          <View style={styles.navBar}>
-            <TouchableOpacity style={styles.iconLeft} onPress={() => {}}>
-              <Icon name="add" size={25} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iconRight} onPress={() => {}}>
-              <Icon name="search" size={25} color="#fff" />
-            </TouchableOpacity>
-          </View>
-        </View>
-      )
+
 
     segmentClick(index){
       this.setState({
@@ -118,6 +109,12 @@ class MusicProfile extends Component{
       return(<View style={{width:'100%',alignItems:'center'}}>
         <Text style={{color:'white'}}>{this.props.userInformation.userName}</Text>
       </View>)
+    }
+
+    _renderLeftComponent(){
+      return(
+        <AntDesignIcon color="white" size={20} name="logout" onPress={()=>this.props.setUserLogging(false)}/>
+      )
     }
       _onPressHandler() {
         this.loadingButton.showLoading(true);
@@ -135,12 +132,13 @@ class MusicProfile extends Component{
               <Header
                 backgroundColor={mainColor}
                 placement="left"
-                leftComponent={{ icon: 'menu', color: '#fff' }}
+                leftComponent={this._renderLeftComponent}
                 centerComponent={this._renderCenterComponentHeader}
                 rightComponent={{ icon: 'home', color: '#fff' }}
                 containerStyle={{
                   alignItems:'center',
                   justifyContent: 'center',
+                  height:HEADER_HEIGHT
                 }}
               />
                 <View style={{paddingTop:10}}>

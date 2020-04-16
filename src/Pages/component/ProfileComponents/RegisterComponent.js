@@ -12,7 +12,7 @@ import {
 } from './../../../CommonFiles/Style';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {isUserLogged} from '../../Redux/Actions/index';
-import {BaseApiUrl} from './../../../CommonFiles/ConstantData';
+import {BaseApiUrl,UIErrorMessageCode} from './../../../CommonFiles/ConstantData';
 import axios from 'axios';
 import DropdownAlert from 'react-native-dropdownalert';
 import VerificationCodeComponent from './ForgotPasswordComponent/VerificationCodeComponent';
@@ -159,6 +159,7 @@ class RegisterComponent extends React.Component {
       var data = {
         callNumber: Mobile,
         confirmationCode: confirmationCode,
+        TLID:this.props.configApp.TLID,
       };
       axios
         .post(BaseApiUrl + '/MessageApi/ConfirmVerificationCode', data)
@@ -194,7 +195,7 @@ class RegisterComponent extends React.Component {
           this.loadingBtnChkCode.showLoading(false);
         });
     } else {
-      this.dropdown.alertWithType('error', 'Error', 'لطفا کد را وارد نمایید.');
+      this.dropdown.alertWithType('error', 'Error', commonUtility.getUIErrorMessagesByCode(UIErrorMessageCode.InputConfirmationCode));
     }
   };
 
@@ -214,6 +215,7 @@ class RegisterComponent extends React.Component {
       password: this.state.userData.Password,
       Mobile: this.state.userData.Mobile,
       userName: this.state.userData.UserName,
+      TLanguageCode:this.props.configApp.TLID,
     };
 
     if (
@@ -226,12 +228,12 @@ class RegisterComponent extends React.Component {
       this.props.showDropDownAlert(
         'error',
         'خطا',
-        'اطلاعات به صورت کامل وارد شده است.',
+        commonUtility.getUIErrorMessagesByCode(UIErrorMessageCode.InsertAllData),
       );
       return;
     }
     if (this.state.isValidPassword == false) {
-      this.props.showDropDownAlert('error', 'خطا', 'پسورد مطابقت ندارد.');
+      this.props.showDropDownAlert('error','خطا',commonUtility.getUIErrorMessagesByCode(UIErrorMessageCode.PasswordAndConfirmPasswordIsNotSame));
       return;
     }
     this.loadingBtnSignUP.showLoading(true);
@@ -246,7 +248,7 @@ class RegisterComponent extends React.Component {
           this.props.showDropDownAlert(
             'success',
             'خطا',
-            'عملیات با موفقیت انجام گردید',
+            res.data.Errors.Message,
           );
           this.setState({
             ...this.state,
@@ -271,7 +273,7 @@ class RegisterComponent extends React.Component {
       this.props.showDropDownAlert(
         'error',
         'خطا',
-        'لطفا موبایل را به درستی وارد نمایید',
+        commonUtility.getUIErrorMessagesByCode(UIErrorMessageCode.MobileFormat),
       );
     }
     axios.post(BaseApiUrl + '/UserApi/CheckMobile', data).then(res => {
@@ -297,6 +299,7 @@ class RegisterComponent extends React.Component {
   CheckUserName = () => {
     var data = {
       userName: this.state.userData.UserName,
+      TLanguageCode:this.props.configApp.TLID,
     };
     axios.post(BaseApiUrl + '/UserApi/CheckUserName', data).then(res => {
       if (res.data.isError == true) {
@@ -329,6 +332,7 @@ class RegisterComponent extends React.Component {
   checkEmailValid = () => {
     var data = {
       email: this.state.userData.Email,
+      TLanguageCode:this.props.configApp.TLID,
     };
     if (data.email === '') {
     } else {
@@ -336,7 +340,7 @@ class RegisterComponent extends React.Component {
         this.props.showDropDownAlert(
           'error',
           'خطا',
-          'لطفا ایمیل را به درستی وارد نمایید',
+          commonUtility.getUIErrorMessagesByCode(UIErrorMessageCode.EmailIncorrect),
         );
       }
       axios.post(BaseApiUrl + '/UserApi/CheckEmail', data).then(res => {
@@ -367,6 +371,7 @@ class RegisterComponent extends React.Component {
         BaseApiUrl +
           '/MessageApi/SendVerificationCode?callNumber=/' +
           this.state.userData.Mobile,
+          '&TLID=' + this.props.configApp.TLID,
       )
       .then(res => {
         if (res.data.isError == true) {
@@ -510,7 +515,7 @@ class RegisterComponent extends React.Component {
             </VerificationCodeComponent>
             <DropdownAlert
               ref={ref => (this.dropdown = ref)}
-              closeInterval={1500}
+              closeInterval={2500}
               zIndex={2000}
             />
           </View>
@@ -542,6 +547,7 @@ const mapstatesToProps = state => {
   return {
     isUserLogged: state.user.isUserLogged,
     userInformation: state.user.userInformation,
+    configApp: state.configApp,
   };
 };
 

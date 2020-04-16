@@ -14,7 +14,7 @@ import {connect} from 'react-redux';
 import {saveUserInformation, isUserLogged} from '../../Redux/Actions/index';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import VerificationCodeComponent from './ForgotPasswordComponent/VerificationCodeComponent';
-import {BaseApiUrl} from './../../../CommonFiles/ConstantData';
+import {BaseApiUrl,UIErrorMessageCode} from './../../../CommonFiles/ConstantData';
 import {DropDownHolder} from './../../component/DropDownHolder';
 import DropdownAlert from 'react-native-dropdownalert';
 import {Validation} from './../../../CommonFiles/Validation';
@@ -62,6 +62,7 @@ class LoginComponent extends React.Component {
     var data = {
       email: this.state.userData.Email,
       password: this.state.userData.Password,
+      TLanguageCode:this.props.configApp.TLID,
     };
     this.loadingBtnSignIn.showLoading(true);
     axios.post(BaseApiUrl + '/UserApi/Login', data).then(res => {
@@ -73,7 +74,7 @@ class LoginComponent extends React.Component {
         this.props.showDropDownAlert(
           'success',
           'خطا',
-          'عملیات با موفقیت انجام گردید',
+          res.data.Errors.Message,
         );
         this.props.setUserLogging(true);
         const userInformation = {
@@ -84,7 +85,7 @@ class LoginComponent extends React.Component {
         this.props.saveUserInformation(userInformation);
       }
     }).catch(error => {
-      this.dropdown.alertWithType('error', 'Error', error);
+      this.props.showDropDownAlert('error', 'Error', error);
       this.loadingBtnChkCode.showLoading(false);
     });
   };
@@ -104,7 +105,8 @@ class LoginComponent extends React.Component {
         .get(
           BaseApiUrl +
             '/MessageApi/SendVerificationCode?callNumber=/' +
-            this.state.forgotPasswordData.MobileForSendCode,
+            this.state.forgotPasswordData.MobileForSendCode +
+            '&TLID=' + this.props.configApp.TLID,
         )
         .then(res => {
           this.loadingBtnSend.showLoading(false);
@@ -115,7 +117,7 @@ class LoginComponent extends React.Component {
               res.data.Errors.Message,
             );
           } else {
-            this.dropdown.alertWithType('success', 'Error', 'کد ارسال گردید.');
+            this.dropdown.alertWithType('success', 'Error', res.data.Errors.Message);
             this.setState({
               ...this.state,
               isSendVerificationCode: false,
@@ -133,7 +135,7 @@ class LoginComponent extends React.Component {
       this.dropdown.alertWithType(
         'error',
         'Error',
-        'لطفا شماره موبایل را بدرستی وارد نمایید.',
+        commonUtility.getUIErrorMessagesByCode(UIErrorMessageCode.MobileFormat),
       );
     }
   };
@@ -145,6 +147,7 @@ class LoginComponent extends React.Component {
       var data = {
         callNumber: MobileForSendCode,
         confirmationCode: verficationCode,
+        TLID:this.props.configApp.TLID,
       };
       axios
         .post(BaseApiUrl + '/MessageApi/ConfirmVerificationCode', data)
@@ -185,6 +188,7 @@ class LoginComponent extends React.Component {
         BaseApiUrl +
           '/MessageApi/SendVerificationCode?callNumber=/' +
           this.state.forgotPasswordData.MobileForSendCode,
+          '&TLID=' + this.props.configApp.TLID,
       )
       .then(res => {
         if (res.data.isError == true) {
@@ -194,7 +198,7 @@ class LoginComponent extends React.Component {
             res.data.Errors.Message,
           );
         } else {
-          this.dropdown.alertWithType('success', 'Error', 'کد ارسال گردید.');
+          this.dropdown.alertWithType('success', 'Error', res.data.Errors.Message);
         }
       });
   };
@@ -211,6 +215,7 @@ class LoginComponent extends React.Component {
         callNumber: MobileForSendCode,
         confirmationCode: verficationCode,
         password: NewPassword,
+        TLID:this.props.configApp.TLID,
       };
       axios
         .post(BaseApiUrl + '/MessageApi/ResetPassword', data)
@@ -525,6 +530,7 @@ const mapStateToProps = state => {
   return {
     isUserLogged: state.user.isUserLogged,
     userInformation: state.user.userInformation,
+    configApp: state.configApp,
   };
 };
 

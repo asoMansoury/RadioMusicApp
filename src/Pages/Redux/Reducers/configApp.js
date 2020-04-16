@@ -1,5 +1,9 @@
 /* eslint-disable no-undef */
-import {SET_APP_LANGUAGE, SET_FILTER_ELEMENT} from './../Actions/type';
+import {
+  SET_APP_LANGUAGE,
+  SET_FILTER_ELEMENT,
+  SET_DEFAULT_LANGUAGE,
+} from './../Actions/type';
 import commonUtility from '../../../CommonFiles/commonUtility';
 const initialState = {
   elements: [],
@@ -7,6 +11,7 @@ const initialState = {
   elementTitle: '',
   elementPlaceHolder: '',
   key: '',
+  TLID: 'ENG',
 };
 export default function configApp(state = initialState, action = {}) {
   const {payload} = action;
@@ -28,8 +33,13 @@ export default function configApp(state = initialState, action = {}) {
         elementTitle: elementVal.ElementTitle,
         elementPlaceHolder: elementVal.ElementPlaceHolder,
       };
-      console.log('filter State menet : ', filterResult);
       return filterResult;
+    case SET_DEFAULT_LANGUAGE:
+      let resultDefault = {
+        ...state,
+        TLID: action.payload,
+      };
+      return resultDefault;
     default:
       return state;
   }

@@ -3,7 +3,7 @@
 /* eslint-disable no-undef */
 import React, {Component} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {platformWidth,UIName,TLID} from './../../../CommonFiles/ConstantData';
+import {platformWidth,UIName,UIPlatForm,TLID} from './../../../CommonFiles/ConstantData';
 import LoginComponent from './../../component/ProfileComponents/LoginComponent';
 import RegisterComponent from './../../component/ProfileComponents/RegisterComponent';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -14,7 +14,7 @@ import DropdownAlert from 'react-native-dropdownalert';
 import {DropDownHolder} from './../../component/DropDownHolder';
 import commonUtility from './../../../CommonFiles/commonUtility';
 import axios from 'axios';
-import {isUserLogged, setPageLanguage,filterElementsLanguage} from '../../Redux/Actions/index';
+import {isUserLogged, setPageLanguage,filterElementsLanguage,setDefaultAppLanguage} from '../../Redux/Actions/index';
 
 import {
   mainColor,
@@ -53,14 +53,16 @@ class Profile extends Component {
   };
   componentDidUpdate() {}
   componentWillMount() {
-    this._loadText(TLID.English);
+    // this.props.setPageLanguage(TLID.English);
+    this._loadText(this.props.configApp.TLID);
+    commonUtility.setUIErrorMessages(this.props.configApp.TLID);
   }
 
   _loadText = TlID => {
     var data = {
       TLanguageID: TlID,
       Key: UIName.Profile,
-      PlatformType: 3,
+      PlatformType: UIPlatForm.MobileApplication,
     };
     axios.post(BaseApiUrl + '/FrontEndApi/inqueryPage', data).then(res => {
       if (res.data.isError === true) {
@@ -88,6 +90,7 @@ class Profile extends Component {
         return (
           <LoginComponent
             screenProps={this.props}
+            showDropDownAlert={this.showDropDownAlert}
           />
         );
       case SignUpKey.toString():
@@ -165,6 +168,9 @@ const mapDispatchToProps = dispath => {
     filterElementsLanguage:value=>{
       dispath(filterElementsLanguage(value));
     },
+    setDefaultAppLanguage:value=>{
+      dispath(setDefaultAppLanguage(value));
+    }
   };
 };
 

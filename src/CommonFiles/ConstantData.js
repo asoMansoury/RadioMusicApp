@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import {Dimensions, Platform} from 'react-native';
-export const BaseApiUrl = 'http://192.168.164.2:53094/api';
+export const BaseApiUrl = 'http://192.168.163.2:53094/api';
 // export const BaseApiUrl = 'http://185.83.114.167:8016/api';
 export const mainColor = '#388E3C';
 export const IS_IPHONE_X =
@@ -21,6 +21,21 @@ export const UIName = {
   Profile: 'Profile',
 };
 export const TLID = {
-  English: 2,
-  Persian: 4,
+  English: 'ENG',
+  Persian: 'PER',
+};
+
+export const UIPlatForm = {
+  WebApplication: 'Web',
+  MobileApplication: 'Mobile',
+};
+
+export const UIErrorMessageCode = {
+  EmailIncorrect: 'EMINC',
+  MobileFormat: 'MBINC',
+  InputConfirmationCode: 'INCAG',
+  PasswordMustInputted: 'PMINP',
+  PasswordAndConfirmPasswordIsNotSame: 'PACIN',
+  PasswordAndConfirmPasswordIsCorrect: 'PACIV',
+  InsertAllData: 'IFIFL',
 };

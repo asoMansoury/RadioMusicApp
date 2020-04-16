@@ -6,6 +6,7 @@ import {
   SET_USER_INOFORMATION,
   SET_APP_LANGUAGE,
   SET_FILTER_ELEMENT,
+  SET_DEFAULT_LANGUAGE,
 } from './type';
 export const setUserRunning = isLogged => ({
   type: SET_IS_FIRST_TIME_RUNNING,
@@ -39,5 +40,10 @@ export const setPageLanguage = value => ({
 
 export const filterElementsLanguage = value => ({
   type: SET_FILTER_ELEMENT,
+  payload: value,
+});
+
+export const setDefaultAppLanguage = value => ({
+  type: SET_DEFAULT_LANGUAGE,
   payload: value,
 });
