@@ -268,6 +268,7 @@ class RegisterComponent extends React.Component {
   checkMobileValid = () => {
     var data = {
       Mobile: this.state.userData.Mobile,
+      TLanguageCode:this.props.configApp.TLID,
     };
     if (Validation.checkMobile(data.Mobile) === false) {
       this.props.showDropDownAlert(

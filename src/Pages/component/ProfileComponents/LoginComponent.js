@@ -21,6 +21,8 @@ import {Validation} from './../../../CommonFiles/Validation';
 import AnimateLoadingButton from 'react-native-animate-loading-button';
 import commonUtility from './../../../CommonFiles/commonUtility';
 
+
+
 class LoginComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -54,9 +56,10 @@ class LoginComponent extends React.Component {
     };
   }
 
+
   componentDidUpdate() {}
 
-  renderIcon = icon => () => <Ionicons name={icon} size={24} />;
+  renderIcon = icon => () => <Ionicons color="#00E676" name={icon} size={24} />;
 
   _LoginEvent = () => {
     var data = {
@@ -520,6 +523,7 @@ class LoginComponent extends React.Component {
               zIndex={2000}
             />
           </Overlay>
+
         </View>
       </KeyboardAwareScrollView>
     );

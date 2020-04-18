@@ -12,7 +12,6 @@ export default class commonUtility {
       .then(res => {
         if (res.data.isError === false) {
           this.UIErrorMessages = res.data.ErrorMessages;
-          console.log(this.UIErrorMessages);
         }
       });
   }

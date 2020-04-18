@@ -84,6 +84,6 @@ export const animatedLoadinBtnConfig = {
   height: 45,
   titleFontSize: 16,
   titleColor: 'rgb(255,255,255)',
-  backgroundColor: 'rgb(29,18,121)',
+  backgroundColor: '#00796b',
   borderRadius: 4,
 };

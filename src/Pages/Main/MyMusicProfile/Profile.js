@@ -15,7 +15,8 @@ import {DropDownHolder} from './../../component/DropDownHolder';
 import commonUtility from './../../../CommonFiles/commonUtility';
 import axios from 'axios';
 import {isUserLogged, setPageLanguage,filterElementsLanguage,setDefaultAppLanguage} from '../../Redux/Actions/index';
-
+import {FloatingAction} from 'react-native-floating-action';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   mainColor,
   BaseApiUrl,
@@ -44,6 +45,8 @@ class Profile extends Component {
     this._loadText = this._loadText.bind(this);
   }
   state = {
+    actions:[],
+    language:[],
     isShowDropDown: false,
     index: 0,
     routes: [
@@ -54,8 +57,27 @@ class Profile extends Component {
   componentDidUpdate() {}
   componentWillMount() {
     // this.props.setPageLanguage(TLID.English);
+    axios.get(BaseApiUrl + '/LanguageApi/GetLanguages').then(res => {
+      if (res.data.isError === true){
+      } else {
+          var languages = [];
+          res.data.TLanguages.map((item,index)=>{
+            languages.push({
+              text:item.Language,
+              name:item.LanguageCode,
+              position:index,
+              color:'#00796b',
+              icon: <Ionicons color="#FFFFFF" name="ios-mail" size={18} />,
+            });
+          });
+          this.setState({
+            ...this.state,
+            actions:languages,
+          });
+      }
+    });
+
     this._loadText(this.props.configApp.TLID);
-    commonUtility.setUIErrorMessages(this.props.configApp.TLID);
   }
 
   _loadText = TlID => {
@@ -64,6 +86,7 @@ class Profile extends Component {
       Key: UIName.Profile,
       PlatformType: UIPlatForm.MobileApplication,
     };
+    commonUtility.setUIErrorMessages(data.TLanguageID);
     axios.post(BaseApiUrl + '/FrontEndApi/inqueryPage', data).then(res => {
       if (res.data.isError === true) {
       } else {
@@ -129,6 +152,13 @@ class Profile extends Component {
             closeInterval={2000}
             zIndex={10000}
           />
+        <FloatingAction ref={(ref) => { this.floatingAction = ref; }}
+            actions={this.state.actions}
+            color="#00796b"
+            onPressItem={name=>{
+              this.props.setDefaultAppLanguage(name);
+              this._loadText(name);
+            }} />
         </View>
       );
     } else {
@@ -170,7 +200,7 @@ const mapDispatchToProps = dispath => {
     },
     setDefaultAppLanguage:value=>{
       dispath(setDefaultAppLanguage(value));
-    }
+    },
   };
 };
 
