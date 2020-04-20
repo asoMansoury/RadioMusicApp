@@ -1,47 +1,51 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, Text, Image, ActivityIndicator} from 'react-native';
+import {View, Text, Image, ActivityIndicator, StatusBar} from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import {initialAppStyle} from '../../CommonFiles/Style.js';
 import Main from './../Main/Main';
 import {connect} from 'react-redux';
 import {setUserRunning} from './../Redux/Actions/index';
-const slides = [
-  {
-    key: 'somethun',
-    title: 'Title 1',
-    text: 'Description.\nSay something cool',
-    image: 'https://roocket.ir/public/images/2017/5/25/cms-laravel-cover-2.jpg',
-    backgroundColor: '#59b2ab',
-  },
-  {
-    key: 'somethun-dos',
-    title: 'Title 2',
-    text: 'Other cool stuff',
-    image: 'https://roocket.ir/public/images/2017/5/25/cms-laravel-cover-2.jpg',
-    backgroundColor: '#febe29',
-  },
-  {
-    key: 'somethun1',
-    title: 'Rocket guy',
-    text: "I'm already out of descriptions\n\nLorem ipsum bla bla bla",
-    image: 'https://roocket.ir/public/images/2017/5/25/cms-laravel-cover-2.jpg',
-    backgroundColor: '#22bcb5',
-  },
-];
+import {BaseApiUrl, TLID, PageKey} from './../../CommonFiles/ConstantData';
+import Axios from 'axios';
+let slidesconst = [];
 
 class AppIntro extends React.Component {
   constructor(props) {
     super(props);
     if (this.props.user.isFirstTimeRunning == true) {
       this.props.navigation.replace('MainPage');
-    }
+    // }
+    this.state = {
+      slide: [],
+    };
   }
+
+  componentWillMount() {
+    const data = {
+      TLanguageID: TLID.English,
+      Key: PageKey.AppIntro,
+    };
+    Axios.post(BaseApiUrl + '/FrontEndApi/getFiles', data)
+      .then(res => {
+        if (res.data.isError == true) {
+        } else {
+          slidesconst = res.data.FrontPageName.Files;
+          this.setState({
+            ...this.state,
+            slides: res.data.FrontPageName.Files,
+          });
+        }
+      })
+      .catch(error => {});
+  }
+
   _renderItem = item => {
-    const imageUrl = item.item.image.toString();
+    const imageUrl = item.item.FileUri.toString();
     return (
       <View style={initialAppStyle.slide1}>
+        <StatusBar backgroundColor={item.item.Style} />
         <Image source={{uri: imageUrl}} style={{height: '100%'}} />
         <Text>{item.text}</Text>
       </View>
@@ -65,12 +69,12 @@ class AppIntro extends React.Component {
         return (
           <AppIntroSlider
             renderItem={this._renderItem}
-            slides={slides}
+            slides={slidesconst}
             onDone={this._onDone}
           />
         );
       } else {
-        return <Main screenProps={this.props} />;
+        return <Main {...this.props} />;
       }
     }
   }

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import {View, Text, Button} from 'react-native';
-import {createAppContainer} from 'react-navigation';
+import {createAppContainer, NavigationContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import AppIntroPage from './src/Pages/AppIntro/AppIntroSlider';
 import Index from './src/Pages/Authentication/index';
@@ -30,7 +30,11 @@ class AppNavigation extends React.Component {
   }
 
   render() {
-    return <AppContainer screenProps={this.props} />;
+    return (
+      <NavigationContainer>
+        <AppContainer screenProps={this.props} />
+      </NavigationContainer>
+    );
   }
 }
 

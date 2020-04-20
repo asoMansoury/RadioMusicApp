@@ -9,7 +9,7 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
-import { Text ,View, StyleSheet,Image, TouchableOpacity} from 'react-native';
+import { Text ,View, StyleSheet,Image, BackHandler} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import {isUserLogged} from '../../Redux/Actions/index';
@@ -59,6 +59,16 @@ class MusicProfile extends Component{
         this.state={
           activeIndex:0
         }
+  }
+
+  componentWillMount(){
+    BackHandler.addEventListener('hardwareBackPress',function(){
+      return true;
+    }.bind(this))
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress');
   }
 
     renderContent=()=>{
@@ -166,7 +176,7 @@ class MusicProfile extends Component{
                               <View style={{justifyContent:'center',marginLeft:10,flex:3,height:30}}>
                               <AnimateLoadingButton
                                     ref={c=>{this.loadingButton = c}}
-                                    width={animatedLoadinBtnConfig.width}
+                                    width={200}
                                     height={animatedLoadinBtnConfig.height}
                                     title="Edit Profile"
                                     titleFontSize={animatedLoadinBtnConfig.titleFontSize}
@@ -180,6 +190,9 @@ class MusicProfile extends Component{
                               <Button
                                   title="Edit"
                                   type="solid"
+                                  height={animatedLoadinBtnConfig.height}
+                                  borderRadius={animatedLoadinBtnConfig.borderRadius}
+                                  onPress={()=>{this.props.navigation.navigate("test")}}
                                 />
                               </View>
                         </View>

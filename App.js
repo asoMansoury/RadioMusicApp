@@ -7,7 +7,7 @@ import AppIntroPage from './src/Pages/AppIntro/AppIntroSlider';
 import Main from './src/Pages/Main/Main';
 import {Provider} from 'react-redux';
 import {store} from './src/Pages/Redux/Store/index';
-
+import indexText from './src/Pages/indexTest';
 const MainNavigator = createStackNavigator(
   {
     AppIntro: {
@@ -21,6 +21,9 @@ const MainNavigator = createStackNavigator(
       navigationOptions: {
         header: null,
       },
+    },
+    test: {
+      screen: indexText,
     },
   },
   {

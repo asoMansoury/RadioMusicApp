@@ -17,6 +17,7 @@ import axios from 'axios';
 import {isUserLogged, setPageLanguage,filterElementsLanguage,setDefaultAppLanguage} from '../../Redux/Actions/index';
 import {FloatingAction} from 'react-native-floating-action';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
 import {
   mainColor,
   BaseApiUrl,
@@ -81,6 +82,7 @@ class Profile extends Component {
   }
 
   _loadText = TlID => {
+    
     var data = {
       TLanguageID: TlID,
       Key: UIName.Profile,
@@ -134,6 +136,7 @@ class Profile extends Component {
     <TabBar {...props} style={{backgroundColor: '#388E3C'}} />
   );
   render() {
+    // console.log("navigationFormProfileNew : -------------------",this.props.screenProps)
     if (this.props.user.isUserLogged === false) {
       return (
         <View
@@ -164,7 +167,7 @@ class Profile extends Component {
     } else {
       return (
         <View style={styles.container}>
-          <MusicProfile screenProps={this.props} />
+          <MusicProfile {...this.props} />
         </View>
       );
     }

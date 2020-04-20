@@ -91,7 +91,7 @@ class Main extends Component {
             }
           />
           <StatusBar backgroundColor="#388E3C" />
-          <Profile screenProps={this.props.screenProps} />
+          <Profile {...this.props} />
           <BottomNavigation
             activeTab={this.state.activeTab}
             renderTab={this.renderTab}
