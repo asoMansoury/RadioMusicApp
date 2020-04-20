@@ -16,7 +16,7 @@ class AppIntro extends React.Component {
     super(props);
     if (this.props.user.isFirstTimeRunning == true) {
       this.props.navigation.replace('MainPage');
-    // }
+    }
     this.state = {
       slide: [],
     };
