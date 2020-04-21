@@ -12,6 +12,7 @@ const initialState = {
     mobile: '',
     userName: '',
     email: '',
+    token: '',
   },
 };
 export default function user(state = initialState, action = {}) {

@@ -14,7 +14,7 @@ import {connect} from 'react-redux';
 import {saveUserInformation, isUserLogged} from '../../Redux/Actions/index';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import VerificationCodeComponent from './ForgotPasswordComponent/VerificationCodeComponent';
-import {BaseApiUrl,UIErrorMessageCode} from './../../../CommonFiles/ConstantData';
+import {BaseApiUrl,UIErrorMessageCode,UIPlatForm} from './../../../CommonFiles/ConstantData';
 import {DropDownHolder} from './../../component/DropDownHolder';
 import DropdownAlert from 'react-native-dropdownalert';
 import {Validation} from './../../../CommonFiles/Validation';
@@ -68,7 +68,8 @@ class LoginComponent extends React.Component {
       TLanguageCode:this.props.configApp.TLID,
     };
     this.loadingBtnSignIn.showLoading(true);
-    axios.post(BaseApiUrl + '/UserApi/Login', data).then(res => {
+    axios.post(BaseApiUrl + '/UserApi/Login', data,
+    {headers: { PlatformType: UIPlatForm.WebApplication, TLanguageCode:data.TLanguageCode}}).then(res => {
       this.loadingBtnSignIn.showLoading(false);
       if (res.data.isError === true) {
         this.props.showDropDownAlert('error', 'خطا', res.data.Errors.Message);
@@ -84,6 +85,7 @@ class LoginComponent extends React.Component {
           mobile: res.data.Mobile,
           userName: res.data.userName,
           email: res.data.email,
+          token:res.data.PlatformToken,
         };
         this.props.saveUserInformation(userInformation);
       }
